@@ -6,9 +6,9 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
 
   const [style, setStyle] = useState({
     gridArea: position,
-    backgroundColor: padColor,
+    background: `linear-gradient(${padColor}, gray)`,
     [`border${position}Radius`]: '100%',
-    border: 'red solid 1px',
+    border: 'black solid 1vh',
     opacity: '1',
     cursor: 'default',
   })
@@ -31,7 +31,7 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
   }
 
   const turnOff = () => {
-    const newStyle = { ...style, opacity: '5' }
+    const newStyle = { ...style, opacity: '1' }
     setStyle(newStyle)
     synth.triggerRelease()
   }
@@ -41,13 +41,11 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
     setTimeout(() => {
       turnOff()
     }, 200)
-
   }
 
   useEffect(() => {
-    bindRef({ pulseButton, turnOn, turnOff, synth })
+    bindRef({ pulseButton, turnOn, turnOff })
   }, [])
-
 
   useEffect(() => {
     const newStyle = { ...style, cursor: allowClick ? 'pointer' : 'default' }
@@ -58,6 +56,10 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
     <div
       style={style}
       onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}></div>
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
+    >
+    </div>
   )
 }
