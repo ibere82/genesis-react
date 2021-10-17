@@ -1,0 +1,38 @@
+[
+  {
+      "timeToTurnOff": "500",
+      "timeToResolve": "750"
+  },
+  {
+      "timeToTurnOff": "400",
+      "timeToResolve": "625"
+  },
+  {
+      "timeToTurnOff": "300",
+      "timeToResolve": "400"
+  },
+  {
+      "timeToTurnOff": "200",
+      "timeToResolve": "275"
+  },
+  {
+      "timeToTurnOff": "100",
+      "timeToResolve": "150"
+  },
+  {
+      "timeToTurnOff":" 75",
+      "timeToResolve": "100"
+  },
+  {
+      "timeToTurnOff":" 50",
+      "timeToResolve": "75"
+  },
+  {
+      "timeToTurnOff":" 40",
+      "timeToResolve": "60"
+  },
+  {
+      "timeToTurnOff":" 30",
+      "timeToResolve": "40"
+  }
+]

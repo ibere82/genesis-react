@@ -1,0 +1,23 @@
+[
+  {
+    "color": "green",
+    "note": "G4",
+    "position": "TopLeft"
+  },
+  {
+    "color": "red",
+    "note": "C5",
+    "position": "TopRight"
+  },
+  {
+    "color": "yellow",
+    "note": "E4",
+    "position": "BottomLeft"
+  },
+  {
+    "color": "blue",
+    "note": "C4",
+    "position": "BottomRight"
+  }
+]
+

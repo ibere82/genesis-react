@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+    <title>Genesis</title>
+</head>
+
+<body>
+    <main>
+        <div>
+            <button id="start">Iniciar</button>
+            <p class="info-status"><span id="level">Nível</span></p>
+            <p class="info-status"><span id="score">Pontos</span></p>
+        </div>
+
+        <div class="wrapper">
+            <div class="main-game">
+                <div class="genius">
+                    <div class="pad selected" id="blue"></div>
+                    <div class="pad selected" id="yellow"></div>
+                    <div class="pad selected" id="red"></div>
+                    <div class="pad selected" id="green"></div>
+                </div>
+            </div>
+            <div id="top-message-container"><span id="message">Clique em Iniciar</span></div>
+        </div>
+
+        <div>
+            <div style="display: flex;">
+                <a target="_blank" rel="noreferrer" title="Iberê' s linkedin page"
+                    href="https://www.linkedin.com/in/iber%C3%AA-abondanza-kuhlmann-0691b32a/">
+                    <img class="icon" src="/icons/linkedin.png" alt="Iberê' s linkedin page">
+                </a>
+
+                <a target="_blank" rel="noreferrer" title="Iberê' s github page" href="https://github.com/ibere82">
+                    <img class="icon" src="/icons/github.png" alt="Iberê' s github page">
+                </a>
+            </div>
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy;
+            <a target="_blank" rel="noreferrer" href="https://github.com/ibere82">Iberê Abondanza Kuhlmann</a>
+        </p>
+        <p>Developed based on
+            <a target="_blank" rel="noreferrer" href="https://github.com/SpruceGabriela/genesis-dio">
+                this Gabriela Pinheiro's Repository</a> as a task for the Eduzz Fullstack Developer Bootcamp from
+            <a target="_blank" rel="noreferrer" href="https://digitalinnovation.one/">DIO - Digital Inovation One</a>
+        </p>
+    </footer>
+    <script defer type="text/javascript" src="script.js"></script>
+</body>
+
+</html>
