@@ -1,20 +1,19 @@
 import React from 'react'
-import LabelStatus from './LabelStatus';
 import Button from './Button';
 import Footer from './Footer';
 import GameArea from './GameArea';
 import IconsArea from './IconsArea';
 
-export default function Page({ onGame, stopGame, startNewGame, buttons, isClickAllowed, refMessage, handleClick, difficulty, score, message }) {
+export default function Page({ onGame, stopGame, startNewGame, buttons, isClickAllowed, handleClick, difficulty, score, message }) {
   return (
     <>
       <main style={{ display: 'flex', padding: '20px' }}>
-        <div>
-          <Button handle={onGame ? stopGame : startNewGame} label={onGame ? 'Cancelar' : 'Iniciar'} />
-          <LabelStatus label={'Nível'} value={difficulty} />
-          <LabelStatus label={'Pontos'} value={score} />
-        </div>
         <GameArea
+          onGame={onGame}
+          startNewGame={startNewGame}
+          stopGame={stopGame}
+          difficulty={difficulty}
+          score={score}
           buttons={buttons}
           isClickAllowed={isClickAllowed}
           handleClick={handleClick}
@@ -22,6 +21,9 @@ export default function Page({ onGame, stopGame, startNewGame, buttons, isClickA
         />
         <IconsArea />
       </main>
+      <div style={{ position: 'absolute', bottom: '15vh', right: '15vh' }}>
+      <Button handle={onGame ? stopGame : startNewGame} label={onGame ? 'Cancelar' : 'Iniciar'} />
+      </div>
       <Footer />
     </>
 

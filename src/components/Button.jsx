@@ -2,22 +2,24 @@ import React from 'react'
 import styled from 'styled-components'
 
 const StyledButton = styled.button`
-  background-color: #4CAF50; /* Green */
-  border: gray solid  1px;
+  background-color: #4CAF50;
+  border: gray solid 0.3vh;
+  border-radius: 8px;
   color: white;
-  padding: 15px 32px;
   text-align: center;
   display: inline-block;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
-  width: 120px;
+  height: 10vh;
+  width: 20vh;
   :hover{
-    border: lightgrey solid  1px;
+    border: lightgrey solid 0.5vh;
   }`
 
 export default function Button({ handle, label }) {
+  
   return (
-    <StyledButton onClick={handle}>{label}</StyledButton>
+    <StyledButton onClick={handle} >{label}</StyledButton>
   )
 }
 

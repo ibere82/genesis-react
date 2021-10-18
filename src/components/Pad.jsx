@@ -8,7 +8,7 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
     gridArea: position,
     background: `linear-gradient(${padColor}, gray)`,
     [`border${position}Radius`]: '100%',
-    border: 'black solid 1vh',
+    border: `black solid 0.2vh`,
     opacity: '1',
     cursor: 'default',
   })

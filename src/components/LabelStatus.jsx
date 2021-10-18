@@ -1,7 +1,9 @@
 import React from 'react'
 
-export default function LabelStatus({label, value}) {
+export default function LabelStatus({ label, value }) {
   return (
-    <p style={{textAlign: 'left'}}><span id="level">{label}: {value}</span></p>
+    <div >
+      <p style={{ textAlign: 'right', fontSize: '48px' }}>{label}{value}</p>
+    </div>
   )
 }
