@@ -9,8 +9,8 @@ import './App.css';
 
 const synth = new Tone.AMSynth().toDestination();
 
-const MAX_TONES_BY_LEVEL = 12;
-const MAX_LEVEL = levelTimes.length;
+const MAX_TONES_BY_LEVEL = 2//12;
+const MAX_LEVEL = 2//levelTimes.length;
 
 function App() {
   const [shuffledOrder, setShuffledOrder] = useState([]);
@@ -24,7 +24,8 @@ function App() {
   const { onGame } = current;
 
   useEffect(() => {
-    setMessage('Bem vindo ao Genius!');
+    setMessage(
+      `Olá e Boas vindas!!!`);
   }, []);
 
   useEffect(() => {
@@ -117,21 +118,20 @@ function App() {
     return new Promise(async (resolve) => {
 
       for (let index of winMusic) {
-        await scheduleOnOffPads(buttons[index].color, 7);
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
       };
       for (let index of winMusic) {
-        await scheduleOnOffPads(buttons[index].color, 7);
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
       };
       for (let index of winMusic) {
-        await scheduleOnOffPads(buttons[index].color, 7);
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
       };
       for (let index of winMusic) {
-        await scheduleOnOffPads(buttons[index].color, 7);
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
       };
       resolve();
     });
   };
-
 
   const handleClick = async (color) => {
     if (shuffledOrder[clickCount] !== color) {

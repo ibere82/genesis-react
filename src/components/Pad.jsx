@@ -1,56 +1,56 @@
-import React, { useEffect, useState } from 'react'
-import * as Tone from 'tone'
+import React, { useEffect, useState } from 'react';
+import * as Tone from 'tone';
 const synth = new Tone.AMSynth().toDestination();
 
-export default function Pad({ padColor, allowClick, position, bindRef, note, handleClick }) {
+export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
+
+  useEffect(() => {
+    bindRef({ pulseButton, turnOn, turnOff });
+  }, []);
+
+  useEffect(() => {
+    const newStyle = { ...style, cursor: allowClick ? 'pointer' : 'default' };
+    setStyle(newStyle);
+  }, [allowClick]);
 
   const [style, setStyle] = useState({
     gridArea: position,
-    background: `linear-gradient(${padColor}, gray)`,
+    background: `linear-gradient(${gradient[0]}, ${gradient[1]})`,
     [`border${position}Radius`]: '100%',
     border: `black solid 0.2vh`,
-    opacity: '1',
+    opacity: '0.5',
     cursor: 'default',
-  })
+  });
 
   const handleMouseDown = () => {
-    if (allowClick) turnOn()
-  }
+    if (allowClick) turnOn();
+  };
 
   const handleMouseUp = () => {
     if (allowClick) {
-      turnOff()
-      handleClick(padColor)
-    }
-  }
+      turnOff();
+      handleClick(color);
+    };
+  };
 
   const turnOn = () => {
-    const newStyle = { ...style, opacity: '0.5' }
-    setStyle(newStyle)
-    synth.triggerAttack(note)
-  }
+    const newStyle = { ...style, opacity: '1' };
+    setStyle(newStyle);
+    synth.triggerAttack(note);
+  };
 
   const turnOff = () => {
-    const newStyle = { ...style, opacity: '1' }
-    setStyle(newStyle)
-    synth.triggerRelease()
-  }
+    const newStyle = { ...style, opacity: '0.5' };
+    setStyle(newStyle);
+    synth.triggerRelease();
+  };
 
   const pulseButton = () => {
-    turnOn()
+    turnOn();
     setTimeout(() => {
-      turnOff()
-    }, 200)
-  }
-
-  useEffect(() => {
-    bindRef({ pulseButton, turnOn, turnOff })
-  }, [])
-
-  useEffect(() => {
-    const newStyle = { ...style, cursor: allowClick ? 'pointer' : 'default' }
-    setStyle(newStyle)
-  }, [allowClick])
+      turnOff();
+    }, 200);
+  };
 
   return (
     <div
@@ -61,5 +61,5 @@ export default function Pad({ padColor, allowClick, position, bindRef, note, han
       onTouchEnd={handleMouseUp}
     >
     </div>
-  )
-}
+  );
+};

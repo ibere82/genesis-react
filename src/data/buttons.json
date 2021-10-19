@@ -1,23 +1,38 @@
 [
   {
     "color": "green",
+    "gradient": [
+      "#00ff00",
+      "#60ff60"
+    ],
     "note": "G4",
     "position": "TopLeft"
   },
   {
     "color": "red",
+    "gradient": [
+      "#ff0000",
+      "#ff6060"
+    ],
     "note": "C5",
     "position": "TopRight"
   },
   {
     "color": "yellow",
+    "gradient": [
+      "#ffff00",
+      "#ffff99"
+    ],
     "note": "E4",
     "position": "BottomLeft"
   },
   {
     "color": "blue",
+    "gradient": [
+      "#0000bb",
+      "#6060bb"
+    ],
     "note": "C4",
     "position": "BottomRight"
   }
 ]
-

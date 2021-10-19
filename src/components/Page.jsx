@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Button from './Button';
 import Footer from './Footer';
 import GameArea from './GameArea';
@@ -26,6 +26,5 @@ export default function Page({ onGame, stopGame, startNewGame, buttons, isClickA
       </div>
       <Footer />
     </>
-
-  )
-}
+  );
+};

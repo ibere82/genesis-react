@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 export default function Icon({ title, href, src }) {
  const style={
   width: '68px',
   height: '68px',
   padding: '0.6rem',
- }
+ };
  
   return (
     <a
@@ -20,5 +20,5 @@ export default function Icon({ title, href, src }) {
         src={src}
         alt={title} />
     </a>
-  )
-}
+  );
+};

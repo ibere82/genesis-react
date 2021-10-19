@@ -1,10 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 const Link = styled.a`
   color: inherit;
   text-decoration: none;
-`
+`;
 
 export default function Footer() {
 
@@ -29,5 +29,5 @@ export default function Footer() {
         <Link target="_blank" rel="noreferrer" title={'SVG Silh'} href={'https://svgsilh.com/pt/image/39747.html'}>SVG Silh</Link>
       </p>
     </footer>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
 // Original Svg created by potrace 1.15, written by Peter Selinger 2001-2017
 
-import React from 'react'
+import React from 'react';
 
 const paths = [
   `M1385 12396 c-214 -222 -390 -408 -390 -414 0 -6 177 -193 394 -416 l394 -406
@@ -30,7 +30,7 @@ const paths = [
   `M1382 1234 c-216 -223 -392 -410 -390 -414 2 -4 180 -191 397 -414
   l395 -406 1470 0 1471 1 325 311 c179 171 370 353 424 405 l99 94 -414 415
   -414 414 -1485 0 -1485 0 -393 -406z`
-]
+];
 
 const pathsFromDigit = [
   { paths: [0, 1, 2, 4, 5, 6] },
@@ -43,7 +43,8 @@ const pathsFromDigit = [
   { paths: [0, 2, 5] },
   { paths: [0, 1, 2, 3, 4, 5, 6] },
   { paths: [0, 1, 2, 3, 5, 6] },
-]
+];
+
 export default function DigitalNumber({ digit = 0, color = 'red', width = '13pt', height = '26pt' }) {
 
   return (
@@ -65,10 +66,10 @@ export default function DigitalNumber({ digit = 0, color = 'red', width = '13pt'
           stroke="none"
           fill={color}>
 
-          {pathsFromDigit[digit].paths.map(index => <path d={paths[index]} />)}
+          {pathsFromDigit[digit].paths.map((path,key) => <path key={key} d={paths[path]} />)}
 
         </g>
       </svg>
     </div>
-  )
-}
+  );
+};

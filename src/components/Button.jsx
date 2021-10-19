@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 const StyledButton = styled.button`
   background-color: #4CAF50;
@@ -14,12 +14,11 @@ const StyledButton = styled.button`
   width: 20vh;
   :hover{
     border: lightgrey solid 0.5vh;
-  }`
+  }`;
 
 export default function Button({ handle, label }) {
   
   return (
     <StyledButton onClick={handle} >{label}</StyledButton>
-  )
-}
-
+  );
+};

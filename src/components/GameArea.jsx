@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Pad from './Pad';
 import styled from 'styled-components';
 import DigitalPanel from './DigitalPanel';
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: "center";
-`
+`;
 
 const MainGame = styled.div`
   position: absolute;
@@ -21,7 +21,7 @@ const MainGame = styled.div`
   border: black 1px solid;
   width: 96vh;
   height: 96vh;
-`
+`;
 
 const GeniusPad = styled.div`
   position: absolute;
@@ -35,7 +35,7 @@ const GeniusPad = styled.div`
   border-radius: 100%;
   width: 78vh;
   height: 78vh;
-`
+`;
 
 const Panel = styled.div`
   position: absolute;
@@ -50,8 +50,7 @@ const Panel = styled.div`
   background: linear-gradient(150deg, black, gray);
   border: black 1px solid;
   z-index: 2;
-
-`
+`;
 
 const TopMessageContainer = styled.div`
   position: absolute;
@@ -65,33 +64,29 @@ const TopMessageContainer = styled.div`
   padding: 0.5rem;
   border-radius: 3px;
   opacity: 0.7;
-`
+`;
 
 export default function GameArea({ buttons, isClickAllowed, handleClick, message, onGame, startNewGame, stopGame, difficulty, score }) {
 
-
-  const dinamicStyle =
-    message !== '' ? { backgroundColor: 'white', } : {}
+  const dinamicStyle = message !== '' ? { backgroundColor: 'white', } : {};
 
   return (
     <Wrapper>
       <MainGame>
-
         <GeniusPad>
-          {buttons.map(({ color, position, note }, index) => {
+          {buttons.map(({ color, position, note, gradient }, index) => {
             return (
               <Pad
                 key={color}
+                color={color}
                 note={note}
-                padColor={color}
+                gradient={gradient}
                 position={position}
                 allowClick={isClickAllowed}
                 handleClick={handleClick}
                 bindRef={(ref) => buttons[index].ref = ref} />
             )
           })}
-
-
         </GeniusPad>
         <Panel>
           <div style={{ gridArea: '2 / 2 / 3 / 4' }}>
@@ -114,17 +109,12 @@ export default function GameArea({ buttons, isClickAllowed, handleClick, message
               measurementUnit='pt'
             />
           </div>
-          {/* <div style={{ gridArea: '6 / 2 / 7 / 4' }}>
-            <Button handle={onGame ? stopGame : startNewGame} label={onGame ? 'Cancelar' : 'Iniciar'} />
-          </div> */}
-
         </Panel>
-
       </MainGame>
       <TopMessageContainer
         style={dinamicStyle}>
         {message}
       </TopMessageContainer>
     </Wrapper>
-  )
-}
+  );
+};

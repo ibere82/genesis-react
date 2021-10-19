@@ -1,5 +1,5 @@
-import React from 'react'
-import Icon from './Icon'
+import React from 'react';
+import Icon from './Icon';
 
 export default function IconsArea() {
   return (
@@ -19,5 +19,5 @@ export default function IconsArea() {
         
       </div>
     </div>
-  )
-}
+  );
+};
