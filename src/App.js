@@ -9,8 +9,8 @@ import './App.css';
 
 const synth = new Tone.AMSynth().toDestination();
 
-const MAX_TONES_BY_LEVEL = 2//12;
-const MAX_LEVEL = 2//levelTimes.length;
+const MAX_TONES_BY_LEVEL = 8;
+const MAX_LEVEL = levelTimes.length;
 
 function App() {
   const [shuffledOrder, setShuffledOrder] = useState([]);
@@ -139,7 +139,7 @@ function App() {
       stopGame();
     }
     else {
-      setScore(score + difficulty);
+      setScore(score + (difficulty * (MAX_TONES_BY_LEVEL)));
       const newClickCount = clickCount + 1;
       if (newClickCount === shuffledOrder.length) {
         if (turn < MAX_TONES_BY_LEVEL) setTurn(turn + 1)
@@ -175,9 +175,9 @@ function App() {
       buttons={buttons}
       isClickAllowed={isClickAllowed}
       handleClick={handleClick}
+      message={message}
       difficulty={difficulty}
       score={score}
-      message={message}
     />
   );
 };

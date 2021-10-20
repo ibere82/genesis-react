@@ -1,29 +1,39 @@
 import React from 'react';
-import Button from './Button';
+import styled from 'styled-components';
+import StartPauseButton from './StartPauseButton';
 import Footer from './Footer';
-import GameArea from './GameArea';
 import IconsArea from './IconsArea';
+import GameArea from './GameArea';
+import GenesisPad from './GenesisPad';
+import CenterPanel from './CenterPanel';
+import TopMessage from './TopMessage';
 
-export default function Page({ onGame, stopGame, startNewGame, buttons, isClickAllowed, handleClick, difficulty, score, message }) {
+const Main = styled.main`
+  display: flex;
+  padding: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  position: absolute;
+  bottom: 15vh;
+  right 15vh;
+`;
+
+export default function Page({ buttons, isClickAllowed, handleClick, message, difficulty, score, children, onGame, stopGame, startNewGame }) {
+
   return (
     <>
-      <main style={{ display: 'flex', padding: '20px' }}>
-        <GameArea
-          onGame={onGame}
-          startNewGame={startNewGame}
-          stopGame={stopGame}
-          difficulty={difficulty}
-          score={score}
-          buttons={buttons}
-          isClickAllowed={isClickAllowed}
-          handleClick={handleClick}
-          message={message}
-        />
+      <Main>
+        <GameArea message={message}>
+          <GenesisPad buttons={buttons} isClickAllowed={isClickAllowed} handleClick={handleClick} />
+          <CenterPanel difficulty={difficulty} score={score} />
+          <TopMessage message={message} />
+        </GameArea>
         <IconsArea />
-      </main>
-      <div style={{ position: 'absolute', bottom: '15vh', right: '15vh' }}>
-      <Button handle={onGame ? stopGame : startNewGame} label={onGame ? 'Cancelar' : 'Iniciar'} />
-      </div>
+      </Main>
+      <ButtonContainer>
+        <StartPauseButton handle={onGame ? stopGame : startNewGame} label={onGame ? 'Cancelar' : 'Iniciar'} />
+      </ButtonContainer>
       <Footer />
     </>
   );

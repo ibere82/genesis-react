@@ -16,9 +16,7 @@ const StyledButton = styled.button`
     border: lightgrey solid 0.5vh;
   }`;
 
-export default function Button({ handle, label }) {
-  
-  return (
-    <StyledButton onClick={handle} >{label}</StyledButton>
-  );
+export default function StartPauseButton({ handle, label }) {
+
+  return <StyledButton onClick={handle}>{label}</StyledButton>;
 };
