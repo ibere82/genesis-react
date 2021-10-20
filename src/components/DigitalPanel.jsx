@@ -14,7 +14,7 @@ export default function DigitalPanel({ label = '', number = 0, color = 'red', di
         style={{
           display: 'flex',
           backgroundColor: 'black',
-          padding: '2px',
+          padding: `${height/10}px`,
           justifyContent: 'flex-end'
         }}
       >

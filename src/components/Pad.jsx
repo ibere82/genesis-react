@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { EventInjector } from 'react-event-injector';
 import * as Tone from 'tone';
+
 const synth = new Tone.AMSynth().toDestination();
 
 export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
@@ -52,14 +54,20 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
     }, 200);
   };
 
+  const handleTouch = (e) => {
+    e.preventDefault();
+    handleMouseDown();
+  };
+
   return (
-    <div
-      style={style}
+    <EventInjector
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onTouchStart={handleMouseDown}
+      onTouchStart={handleTouch}
       onTouchEnd={handleMouseUp}
+      settings={{ passive: false }}
     >
-    </div>
+      <div id={color} style={style}></div>
+    </EventInjector>
   );
 };

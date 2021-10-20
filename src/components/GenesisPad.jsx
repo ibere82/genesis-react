@@ -14,6 +14,14 @@ const StyledPad = styled.div`
   border-radius: 100%;
   width: 78vh;
   height: 78vh;
+
+  @media(max-width: 800px) {
+    grid-gap: 0.8vh;
+    width: 38vh;
+    height: 38vh;
+    top: calc(50% - 19vh);
+    right: calc(50% - 19vh);
+   }
 `;
 
 export default function GenesisPad({buttons, isClickAllowed, handleClick}) {

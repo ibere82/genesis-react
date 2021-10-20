@@ -10,11 +10,17 @@ const StyledButton = styled.button`
   display: inline-block;
   font-size: 18px;
   cursor: pointer;
-  height: 10vh;
-  width: 20vh;
+  height: 60px;
+  width: 100px;
   :hover{
     border: lightgrey solid 0.5vh;
-  }`;
+  }
+  
+  @media(max-width: 800px) {
+    height: 50px;
+    width: 90px;
+   }
+   `;
 
 export default function StartPauseButton({ handle, label }) {
 

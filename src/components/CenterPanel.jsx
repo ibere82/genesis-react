@@ -15,31 +15,41 @@ const StyledPanel = styled.div`
   background: linear-gradient(150deg, black, gray);
   border: black 1px solid;
   z-index: 2;
+  
+  @media(max-width: 800px) {
+    width: 18vh;
+    height: 18vh;
+    top: calc(50% - 9vh);
+    right: calc(50% - 9vh);
+   }
 `;
 
-export default function CenterPanel({difficulty, score}) {
+export default function CenterPanel({ difficulty, score }) {
+
+  const height = window.matchMedia("(min-width: 1000px)").matches ? '20' : '8'
+
   return (
     <StyledPanel>
-    <div style={{ gridArea: '2 / 2 / 3 / 4' }}>
-      <DigitalPanel
-        label={'Nível'}
-        number={difficulty}
-        color='red'
-        digits='1'
-        height='20'
-        measurementUnit='pt'
-      />
-    </div>
-    <div style={{ gridArea: '4 / 2 / 5 / 4' }}>
-      <DigitalPanel
-        label={'Pontos'}
-        number={score}
-        color='red'
-        digits='5'
-        height='20'
-        measurementUnit='pt'
-      />
-    </div>
-  </StyledPanel>
+      <div style={{ gridArea: '2 / 2 / 3 / 4' }}>
+        <DigitalPanel
+          label={'Nível'}
+          number={difficulty}
+          color='red'
+          digits='1'
+          height={height}
+          measurementUnit='pt'
+/>
+      </div>
+      <div style={{ gridArea: '4 / 2 / 5 / 4' }}>
+        <DigitalPanel
+          label={'Pontos'}
+          number={score}
+          color='red'
+          digits='5'
+          height={height}
+          measurementUnit='pt'
+        />
+      </div>
+    </StyledPanel>
   )
 }

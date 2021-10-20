@@ -48,7 +48,7 @@ const pathsFromDigit = [
 export default function DigitalNumber({ digit = 0, color = 'red', width = '13pt', height = '26pt' }) {
 
   return (
-    <div style={{ marginRight: '5px' }}>
+    <div style={{ marginRight: '2px' }}>
       <svg
         version="1.0"
         xmlns="http://www.w3.org/2000/svg"

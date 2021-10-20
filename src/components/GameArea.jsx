@@ -19,17 +19,25 @@ const Board = styled.div`
   border: black 1px solid;
   width: 96vh;
   height: 96vh;
+
+  @media(max-width: 800px) {
+    width: 46vh;
+    height: 46vh;
+    top: calc(20%);
+    right: calc(50% - 34vh);
+
+   }
 `;
 
 export default function GameArea({ children }) {
 
-  const [GeniusPad, CenterPanel, TopMessage] = children;
+  const [GenesisPad, CenterPanel, TopMessage] = children;
 
   return (
     <Wrapper>
       <Board>
         {TopMessage}
-        {GeniusPad}
+        {GenesisPad}
         {CenterPanel}
       </Board>
     </Wrapper>
