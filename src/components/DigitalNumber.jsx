@@ -1,4 +1,5 @@
 // Original Svg created by potrace 1.15, written by Peter Selinger 2001-2017
+// Adapted to a dynamic react component by Iberê Abondanza Kuhlmann
 
 import React from 'react';
 

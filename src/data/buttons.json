@@ -6,7 +6,7 @@
       "#60ff60"
     ],
     "note": "G4",
-    "position": "TopLeft"
+    "position": "top-left"
   },
   {
     "color": "red",
@@ -15,7 +15,7 @@
       "#ff6060"
     ],
     "note": "C5",
-    "position": "TopRight"
+    "position": "top-right"
   },
   {
     "color": "yellow",
@@ -24,7 +24,7 @@
       "#ffff99"
     ],
     "note": "E4",
-    "position": "BottomLeft"
+    "position": "bottom-left"
   },
   {
     "color": "blue",
@@ -33,6 +33,6 @@
       "#6060bb"
     ],
     "note": "C4",
-    "position": "BottomRight"
+    "position": "bottom-right"
   }
 ]

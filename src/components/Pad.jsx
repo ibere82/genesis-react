@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { EventInjector } from 'react-event-injector';
 import * as Tone from 'tone';
+import styled from 'styled-components';
+
+const ColoredButton = styled.div`
+  ${({ position, gradient, allowClick, isOn }) => {
+    const [colorFrom, colorTo] = gradient;
+
+    return `
+      gridArea: ${position};
+      border: black solid 0.2vh;
+      background: linear-gradient(${colorFrom}, ${colorTo});
+      border-${position}-radius: 100%;
+      cursor: ${allowClick ? 'pointer' : 'default'};
+      opacity: ${isOn ? '1' : '0.5'};
+`}}`;
 
 const synth = new Tone.AMSynth().toDestination();
 
 export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
 
+  const [lightStatus, setLightStatus] = useState(false);
+
   useEffect(() => {
     bindRef({ pulseButton, turnOn, turnOff });
   }, []);
-
-  useEffect(() => {
-    const newStyle = { ...style, cursor: allowClick ? 'pointer' : 'default' };
-    setStyle(newStyle);
-  }, [allowClick]);
-
-  const [style, setStyle] = useState({
-    gridArea: position,
-    background: `linear-gradient(${gradient[0]}, ${gradient[1]})`,
-    [`border${position}Radius`]: '100%',
-    border: `black solid 0.2vh`,
-    opacity: '0.5',
-    cursor: 'default',
-  });
 
   const handleMouseDown = () => {
     if (allowClick) turnOn();
@@ -36,14 +38,12 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
   };
 
   const turnOn = () => {
-    const newStyle = { ...style, opacity: '1' };
-    setStyle(newStyle);
+    setLightStatus(true)
     synth.triggerAttack(note);
   };
 
   const turnOff = () => {
-    const newStyle = { ...style, opacity: '0.5' };
-    setStyle(newStyle);
+    setLightStatus(false)
     synth.triggerRelease();
   };
 
@@ -67,7 +67,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
       onTouchEnd={handleMouseUp}
       settings={{ passive: false }}
     >
-      <div id={color} style={style}></div>
+      <ColoredButton position={position} gradient={gradient} allowClick={allowClick} isOn={lightStatus} />
     </EventInjector>
   );
 };

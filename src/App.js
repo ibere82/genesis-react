@@ -46,14 +46,12 @@ function App() {
   }, [turn]);
 
   useEffect(() => {
-       (async () => {
+    (async () => {
       setIsClickAllowed(false);
       for (let color of shuffledOrder) {
         if (current.onGame) await scheduleOnOffPads(color, difficulty - 1);
       };
-      console.log('olá');
       setIsClickAllowed(true);
-      console.log('tchau');
     })()
   }, [shuffledOrder])
 

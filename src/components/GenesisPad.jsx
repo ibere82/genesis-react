@@ -8,8 +8,8 @@ const StyledPad = styled.div`
   right: calc(50% - 39vh);
   display: grid;
   grid-template-areas: 
-    'TopLeft TopRight'
-    'BottomLeft BottomRight';
+    'top-left top-right'
+    'bottom-left bottom-right';
   grid-gap: 4vh;
   border-radius: 100%;
   width: 78vh;
