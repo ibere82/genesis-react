@@ -16,7 +16,7 @@ const Main = styled.main`
 const ButtonContainer = styled.div`
   position: absolute;
   bottom: 70px;
-  right 100px;
+  right: 100px;
 `;
 
 export default function Page({ buttons, isClickAllowed, handleClick, message, difficulty, score, children, onGame, stopGame, startNewGame }) {
