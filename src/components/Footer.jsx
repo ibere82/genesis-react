@@ -25,7 +25,7 @@ export default function Footer() {
       <p>Icons made by&nbsp;
         <Link target='_blank' href="https://www.freepik.com" title="Freepik">Freepik</Link> from&nbsp;
         <Link target='_blank' href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</Link></p>
-      <p>SVG created by potrace 1.15, written by Peter Selinger 2001-2017 available on&nbsp;
+        <p>Digital display numbers SVG created by potrace 1.15, written by Peter Selinger 2001-2017 available on&nbsp;
         <Link target="_blank" rel="noreferrer" title={'SVG Silh'} href={'https://svgsilh.com/pt/image/39747.html'}>SVG Silh</Link>
       </p>
     </footer>
