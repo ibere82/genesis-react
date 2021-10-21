@@ -10,12 +10,12 @@ export default function Footer() {
 
   return (
     <footer style={{ borderTop: 'gray solid 2px', textAlign: 'center' }}>
-      <p>&copy;&nbsp;
+      <p>&nbsp;
         <Link target="_blank" rel="noreferrer" href="https://github.com/ibere82" title={"Iberê' s linkedin page"}>
-          Iberê Abondanza Kuhlmann
+          Developed by Iberê Abondanza Kuhlmann
         </Link>
       </p>
-      <p>Developed based on&nbsp;
+      <p>Based on&nbsp;
         <Link target="_blank" rel="noreferrer" href="https://github.com/SpruceGabriela/genesis-dio">
           Gabriela Pinheiro's original project
         </Link>
