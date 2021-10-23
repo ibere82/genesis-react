@@ -9,6 +9,7 @@ import Page from './components/Page';
 const synth = new Tone.AMSynth().toDestination();
 
 const MAX_TONES_BY_LEVEL = 8;
+const START_LEVEL = 1;
 const MAX_LEVEL = levelTimes.length;
 
 function App() {
@@ -55,7 +56,7 @@ function App() {
 
   const startNewGame = () => {
     setScore(0);
-    setLevel(1);
+    setLevel(START_LEVEL);
     current.onGame = true;
   };
 
@@ -137,7 +138,7 @@ function App() {
     const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
       for (let index of wholeMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, MAX_LEVEL);
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, MAX_LEVEL - 1);
       };
       resolve();
     });
