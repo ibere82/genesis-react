@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Icon({ title, href, src }) {
  const style={
   width: '68px',

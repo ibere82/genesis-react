@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EventInjector } from 'react-event-injector';
 import * as Tone from 'tone';
 import styled from 'styled-components';
+
+const synth = new Tone.AMSynth().toDestination();
 
 const ColoredButton = styled.div`
   ${({ position, gradient, allowClick, isOn }) => {
@@ -16,8 +18,6 @@ const ColoredButton = styled.div`
       opacity: ${isOn ? '1' : '0.5'};
 `}}`;
 
-const synth = new Tone.AMSynth().toDestination();
-
 export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
 
   const [lightStatus, setLightStatus] = useState(false);
@@ -31,7 +31,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
   };
 
   const handleMouseUp = () => {
-    if (allowClick) {
+    if (lightStatus) {
       turnOff();
       handleClick(color);
     };
@@ -54,7 +54,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
     }, 200);
   };
 
-  const handleTouch = (e) => {
+  const handleTouchStart = (e) => {
     e.preventDefault();
     handleMouseDown();
   };
@@ -63,7 +63,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
     <EventInjector
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onTouchStart={handleTouch}
+      onTouchStart={handleTouchStart}
       onTouchEnd={handleMouseUp}
       settings={{ passive: false }}
     >

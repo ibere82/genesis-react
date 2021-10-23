@@ -5,7 +5,6 @@ import levelTimes from './data/levelTimes.json';
 import winMusic from './data/winMusic.json';
 import gameOverMusic from './data/gameOverMusic.json';
 import Page from './components/Page';
-import './App.css';
 
 const synth = new Tone.AMSynth().toDestination();
 
@@ -17,24 +16,19 @@ function App() {
   const [turn, setTurn] = useState(0);
   const [clickCount, setClickCount] = useState(0);
   const [isClickAllowed, setIsClickAllowed] = useState(false);
-  const [difficulty, setDifficulty] = useState(0);
+  const [level, setLevel] = useState(0);
   const [score, setScore] = useState(0);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('Olá e Boas vindas!!!');
   const { current } = useRef({ onGame: false });
   const { onGame } = current;
 
   useEffect(() => {
-    setMessage(
-      `Olá e Boas vindas!!!`);
-  }, []);
-
-  useEffect(() => {
     if (onGame) (async () => {
-      await manageEphemeralMessage(`Iniciando nível ${difficulty}`);
+      await manageEphemeralMessage(`Iniciando nível ${level}`);
       setShuffledOrder([]);
       setTurn(1);
     })();
-  }, [difficulty]);
+  }, [level]);
 
   useEffect(() => {
     if (onGame) {
@@ -49,7 +43,7 @@ function App() {
     (async () => {
       setIsClickAllowed(false);
       for (let color of shuffledOrder) {
-        if (current.onGame) await scheduleOnOffPads(color, difficulty - 1);
+        if (current.onGame) await scheduleOnOffPads(color, level - 1);
       };
       setIsClickAllowed(true);
     })()
@@ -61,21 +55,46 @@ function App() {
 
   const startNewGame = () => {
     setScore(0);
-    setDifficulty(1);
+    setLevel(1);
     current.onGame = true;
   };
 
   const stopGame = () => {
     synth.triggerRelease();
     current.onGame = false;
-    setDifficulty(0);
+    setLevel(0);
     setTurn(0);
   };
 
   const gameOver = async () => {
+    setIsClickAllowed(false);
+    setMessage('Que pena! Você perdeu! Clique em Iniciar para recomeçar');
+    await playGameOverMusic()
+    stopGame()
+  };
+
+  const manageCorrectClick = () => {
+    setScore(score + (level * (MAX_TONES_BY_LEVEL)));
+    checkForNextTurn()
+  };
+
+  const checkForNextTurn = () => {
+    const newClickCount = clickCount + 1;
+    if (newClickCount === shuffledOrder.length) increaseTurn();
+    setClickCount(newClickCount);
+  };
+
+  const increaseTurn = () => {
+    (turn < MAX_TONES_BY_LEVEL) ? setTurn(turn + 1) : increaseLevel()
+  };
+
+  const increaseLevel = () => {
+    const newLevel = level + 1;
+    (newLevel > MAX_LEVEL) ? userWins() : setLevel(newLevel);
+  };
+
+  const playGameOverMusic = () => {
     return new Promise((resolve) => {
-      setIsClickAllowed(false);
-      setMessage('Que pena! Você perdeu! Clique em Iniciar para recomeçar');
       const now = Tone.now();
       gameOverMusic.forEach((note, index) =>
         synth.triggerAttackRelease(note, '8n', now + (index / 20)));
@@ -109,48 +128,23 @@ function App() {
 
   const userWins = async () => {
     setMessage('Parabéns !!!!');
-    await playWinMusic();
+    await playVictoryShow();
     setMessage('Você venceu!! Clique em Iniciar para recomeçar');
     stopGame();
   };
 
-  const playWinMusic = () => {
+  const playVictoryShow = () => {
+    const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
-
-      for (let index of winMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
-      };
-      for (let index of winMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
-      };
-      for (let index of winMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
-      };
-      for (let index of winMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, 7);
+      for (let index of wholeMusic) {
+        if (current.onGame) await scheduleOnOffPads(buttons[index].color, MAX_LEVEL);
       };
       resolve();
     });
   };
 
-  const handleClick = async (color) => {
-    if (shuffledOrder[clickCount] !== color) {
-      await gameOver();
-      stopGame();
-    }
-    else {
-      setScore(score + (difficulty * (MAX_TONES_BY_LEVEL)));
-      const newClickCount = clickCount + 1;
-      if (newClickCount === shuffledOrder.length) {
-        if (turn < MAX_TONES_BY_LEVEL) setTurn(turn + 1)
-        else {
-          const newLevel = difficulty + 1;
-          if (newLevel > MAX_LEVEL) userWins();
-          else setDifficulty(difficulty + 1);
-        };
-      };
-      setClickCount(newClickCount);
-    };
+  const handleClick = (color) => {
+    (shuffledOrder[clickCount] === color) ? manageCorrectClick() : gameOver();
   };
 
   const manageEphemeralMessage = (text, timeBefore = 0, timeDuring = 2000, timeAfter = 2500) => {
@@ -176,7 +170,7 @@ function App() {
       isClickAllowed={isClickAllowed}
       handleClick={handleClick}
       message={message}
-      difficulty={difficulty}
+      level={level}
       score={score}
     />
   );

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import StartPauseButton from './StartPauseButton';
 import Footer from './Footer';
@@ -19,14 +18,14 @@ const ButtonContainer = styled.div`
   right: 100px;
 `;
 
-export default function Page({ buttons, isClickAllowed, handleClick, message, difficulty, score, children, onGame, stopGame, startNewGame }) {
+export default function Page({ buttons, isClickAllowed, handleClick, message, level, score,  onGame, stopGame, startNewGame }) {
 
   return (
     <>
       <Main>
         <GameArea message={message}>
           <GenesisPad buttons={buttons} isClickAllowed={isClickAllowed} handleClick={handleClick} />
-          <CenterPanel difficulty={difficulty} score={score} />
+          <CenterPanel level={level} score={score} />
           <TopMessage message={message} />
         </GameArea>
         <IconsArea />

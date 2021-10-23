@@ -1,34 +1,34 @@
-import React from 'react';
 import DigitalNumber from './DigitalNumber';
 
-export default function DigitalPanel({ label = '', number = 0, color = 'red', digits = 4, height = 26, measurementUnit = 'pt' }) {
+export default function DigitalPanel({
+  number = 0,
+  digits = 4,
+  height = '26pt',
+  color = 'red',
+  backgroundColor = 'black',
+  justifyContent = 'flex-end',
+}) {
   const digitsArray = number.toString().padStart(digits, '0').split('')
- 
+
   return (
-    <>
-      <div style={{ textAlign: 'right', color: 'white' }}>
-        <span>{label}</span>
-      </div>
+    <div
+      style={{
+        display: 'flex',
+        padding: `calc(${height} / 8)`,
+        overflow: 'hidden',
+        backgroundColor,
+        justifyContent,
+      }}
+    >
+      {digitsArray.map((digit, index) =>
+        <DigitalNumber
+          key={index}
+          digit={digit}
+          color={color}
+          width={`calc(${height} / 2)`}
+          height={`${height}`} />
+      )}
+    </div>
 
-      <div
-        style={{
-          display: 'flex',
-          backgroundColor: 'black',
-          padding: `${height/10}px`,
-          justifyContent: 'flex-end'
-        }}
-      >
-        {digitsArray.map((digit, index) =>
-
-          <DigitalNumber
-            key={index}
-            digit={digit}
-            color={color}
-            width={`${height / 2}${measurementUnit}`}
-            height={`${height}${measurementUnit}`} />
-
-        )}
-      </div>
-    </>
   );
 };

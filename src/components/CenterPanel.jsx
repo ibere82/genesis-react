@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components';
 import DigitalPanel from './DigitalPanel';
 
@@ -24,32 +23,36 @@ const StyledPanel = styled.div`
    }
 `;
 
-export default function CenterPanel({ difficulty, score }) {
+export default function CenterPanel({ level, score }) {
 
-  const height = window.matchMedia("(min-width: 1000px)").matches ? '20' : '8'
+  const height = window.matchMedia("(min-width: 1000px)").matches ? '20pt' : '8pt'
 
   return (
     <StyledPanel>
+
       <div style={{ gridArea: '2 / 2 / 3 / 4' }}>
+        <div style={{ textAlign: 'right', color: 'white' }}>
+          <span>Nível</span>
+        </div>
         <DigitalPanel
-          label={'Nível'}
-          number={difficulty}
+          number={level}
           color='red'
           digits='1'
           height={height}
-          measurementUnit='pt'
-/>
+        />
       </div>
+
       <div style={{ gridArea: '4 / 2 / 5 / 4' }}>
+        <div style={{ textAlign: 'right', color: 'white' }}>
+          <span>Pontos</span>
+        </div>
         <DigitalPanel
-          label={'Pontos'}
           number={score}
           color='red'
           digits='5'
           height={height}
-          measurementUnit='pt'
         />
       </div>
     </StyledPanel>
-  )
-}
+  );
+};
