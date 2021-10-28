@@ -10,14 +10,14 @@ const synth = new Tone.AMSynth().toDestination();
 
 function App() {
   const [state, dispatch] = useReducer(reducer, appState);
-  const { current } = useRef({ allowTriggerSound: false });
+  const { current } = useRef({ onGameRightNow: false });
 
-  const { currentGameState, data, configs, texts } = state;
-  const { winMusic, gameOverMusic } = data;
-  const { levelTimes, buttons, maxLevel } = configs;
-  const { level, shuffledOrder, effect } = currentGameState;
-  const { topMessages } = texts;
-  const { nextLevelMessage, gameOverMessage, winMessages, } = topMessages
+  const { mutable, configs } = state;
+  const { game, texts, features } = mutable
+  const { winMusic, gameOverMusic, levelTimes, buttons } = features;
+  const { maxLevel } = configs;
+  const { level, shuffledOrder, effect } = game;
+  const { nextLevelMessage, gameOverMessage, winMessages, } = texts
 
   useEffect(() => {
 
@@ -27,9 +27,9 @@ function App() {
       },
 
       [READY_TO_NEW_LEVEL]: async () => {
-        current.allowTriggerSound = true;
+        current.onGameRightNow = true;
         await manageEphemeralMessage(`${nextLevelMessage} ${level}`);
-        if (current.allowTriggerSound) addNewShuffledColor();
+        if (current.onGameRightNow) addNewShuffledColor();
       },
 
       [READY_TO_NEW_ROUND]: () => {
@@ -40,7 +40,7 @@ function App() {
 
       [READY_TO_TRIGGER_BUTTONS]: async () => {
         for (let color of shuffledOrder) {
-          if (current.allowTriggerSound) await scheduleOnOffPads(color, level - 1);
+          if (current.onGameRightNow) await scheduleOnOffPads(color, level - 1);
         };
         dispatch({ type: GAME_PASSIVE })
       },
@@ -59,7 +59,7 @@ function App() {
 
       [STOPPED]: () => {
         synth.triggerRelease();
-        current.allowTriggerSound = false;
+        current.onGameRightNow = false;
       },
 
       [WAITING_FOR_USER_CLICKS]: () => {
@@ -109,7 +109,7 @@ function App() {
     const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
       for (let index of wholeMusic) {
-        if (current.allowTriggerSound) await scheduleOnOffPads(buttons[index].color, maxLevel - 1);
+        if (current.onGameRightNow) await scheduleOnOffPads(buttons[index].color, maxLevel - 1);
       };
       resolve();
     });
@@ -119,11 +119,11 @@ function App() {
     return new Promise((resolve) => {
 
       setTimeout(() => {
-        if (current.allowTriggerSound) dispatch({ type: SET_MESSAGE, payload: { message: text } })
+        if (current.onGameRightNow) dispatch({ type: SET_MESSAGE, payload: { message: text } })
       }, timeBefore);
 
       setTimeout(() => {
-        if (current.allowTriggerSound) dispatch({ type: SET_MESSAGE, payload: { message: '' } })
+        if (current.onGameRightNow) dispatch({ type: SET_MESSAGE, payload: { message: '' } })
       }, timeDuring);
 
       setTimeout(() => {
@@ -135,7 +135,7 @@ function App() {
   return (
 
     <Page
-      state={state}
+      mutable={mutable}
       dispatch={dispatch}
     />
   );

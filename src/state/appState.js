@@ -7,7 +7,7 @@ import { INITIAL } from '../state/effectsTypes.js'
 
 // configs
 const MAX_TONES_BY_LEVEL = 2;
-const START_LEVEL = 1;
+const START_LEVEL = 8;
 const MAX_LEVEL = levelTimes.length;
 
 const initialGameState = {
@@ -22,49 +22,48 @@ const initialGameState = {
   message: '',
 }
 
-const currentGameState = { ...initialGameState }
-
 const configs = {
   maxTonesByLevel: MAX_TONES_BY_LEVEL,
   startLevel: START_LEVEL,
   maxLevel: MAX_LEVEL,
-  levelTimes,
-  buttons,
-}
-
-const texts = {
-  topMessages: {
-    wellcomeMessage: "",
-    nextLevelMessage: "",
-    abortedGameMessage: "",
-    gameOverMessage: "",
-    winMessages: []
-  },
-  labels: {
-    levelLabel: "",
-    scoreLabel: "",
-    startGameButtonLabel: "",
-    stopGameButtonLabel: ""
-  }
-};
-
-const data = {
-  winMusic,
-  textsStore,
-  gameOverMusic,
-}
-
-const options = {
   currentLanguage: 'pt'
 }
 
 const appState = {
-  configs,
-  data,
-  initialGameState,
-  currentGameState,
-  options,
-  texts,
+  mutable: {
+    game: { ...initialGameState },
+    texts: {
+      wellcomeMessage: "",
+      nextLevelMessage: "",
+      abortedGameMessage: "",
+      gameOverMessage: "",
+      winMessages: [],
+      levelLabel: "",
+      scoreLabel: "",
+      startGameButtonLabel: "",
+      stopGameButtonLabel: ""
+    },
+    features: {
+      timeToTurnOff: null,
+      timeToResolve: null,
+      levelTimes,
+      buttons,
+      winMusic,
+      gameOverMusic,
+      languages: textsStore.languages,
+    }
+  },
+
+  configs: {
+    ...configs
+  },
+
+  storage: {
+    textsStore,
+    levelTimes,
+    buttons,
+    initialGameState,
+  }
 }
 
 export default appState

@@ -21,12 +21,15 @@ const ButtonContainer = styled.div`
   right: 100px;
 `;
 
-export default function Page({ state, dispatch }) {
-  const { configs, currentGameState, texts, data } = state
-  const { textsStore } = data
-  const { topMessages, labels } = texts
-  const { message, isClickAllowed, level, onGame, score } = currentGameState
-  const { buttons } = configs
+export default function Page({  dispatch, mutable }) {
+
+  const { game, texts, features } = mutable
+
+  const { level, message, isClickAllowed, onGame, score } = game;
+  const { abortedGameMessage, stopGameButtonLabel, startGameButtonLabel } = texts
+  const { buttons, languages } = features;
+
+
 
   const handleClick = (color) => {
     dispatch({ type: CLICK, payload: { color } })
@@ -37,22 +40,22 @@ export default function Page({ state, dispatch }) {
   }
 
   const stopGame = () => {
-    dispatch({ type: STOP, payload: { message: topMessages.abortedGameMessage } })
+    dispatch({ type: STOP, payload: { message: abortedGameMessage } })
   }
 
   return (
     <>
       <Main>
-        <LangMenu langs={textsStore.languages} dispatch={dispatch} />
+        <LangMenu langs={languages} dispatch={dispatch} />
         <GameArea message={message}>
           <GenesisPad buttons={buttons} isClickAllowed={isClickAllowed} handleClick={(color) => handleClick(color)} />
-          <CenterPanel labels={labels} level={level} score={score} />
+          <CenterPanel labels={texts} level={level} score={score} />
           <TopMessage message={message} />
         </GameArea>
         <IconsArea />
       </Main>
       <ButtonContainer>
-        <StartPauseButton handle={onGame ? stopGame : startNewGame} label={onGame ? labels.stopGameButtonLabel : labels.startGameButtonLabel} />
+        <StartPauseButton handle={onGame ? stopGame : startNewGame} label={onGame ? stopGameButtonLabel : startGameButtonLabel} />
       </ButtonContainer>
       <Footer />
     </>

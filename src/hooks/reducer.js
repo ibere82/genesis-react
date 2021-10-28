@@ -1,127 +1,138 @@
-import { CLICK, PLAY_SEQUENCE, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE } from '../state/actionsTypes.js';
+import { CLICK, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE } from '../state/actionsTypes.js';
 import { READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS } from '../state/effectsTypes.js'
 
 function reducer(state, { type, payload = {} }) {
 
   const {
     configs,
-    data,
-    initialGameState,
-    currentGameState,
-    options,
+    storage,
+    mutable,
   } = state;
 
-  const newCurrentGameState = { ...currentGameState }
-
-  const increaseClickCount = () => {
-    newCurrentGameState.clickCount++
-  };
-
-  const increaseRound = () => {
-    newCurrentGameState.clickCount = 0
-    newCurrentGameState.round++
-    newCurrentGameState.isClickAllowed = false
-  };
-
-  const increaseLevel = () => {
-    newCurrentGameState.level++
-    newCurrentGameState.round = 0
-    newCurrentGameState.shuffledOrder = []
-  };
-
-  const increaseScore = (add) => {
-    newCurrentGameState.score += add
-  };
+  const { game, texts, features } = mutable
 
   const actions = {
 
     [CLICK]: () => {
 
+      const newGameState = { ...game }
+
       // early return if user loses
-      if (newCurrentGameState.shuffledOrder[newCurrentGameState.clickCount] !== payload.color) {
-        newCurrentGameState.isClickAllowed = false;
-        newCurrentGameState.effect = GAME_OVER;
-        return { ...state, currentGameState: newCurrentGameState }
+      if (newGameState.shuffledOrder[newGameState.clickCount] !== payload.color) {
+        newGameState.isClickAllowed = false;
+        newGameState.effect = GAME_OVER;
+        return { texts, features, game: newGameState }
       }
 
-      increaseClickCount();
-      increaseScore((newCurrentGameState.level * (configs.maxTonesByLevel)))
+      newGameState.clickCount++
+      newGameState.score += newGameState.level * configs.maxTonesByLevel
       // early return if the last click is correct but the click section is not finished
-      if (newCurrentGameState.clickCount !== newCurrentGameState.shuffledOrder.length) {
-        return { ...state, currentGameState: newCurrentGameState }
+      if (newGameState.clickCount !== newGameState.shuffledOrder.length) {
+        return { texts, features, game: newGameState }
       }
 
-      increaseRound();
+      newGameState.clickCount = 0
+      newGameState.round++
+      newGameState.isClickAllowed = false
       //early return if is new round but not new level
-      if (newCurrentGameState.round < configs.maxTonesByLevel) {
-        newCurrentGameState.effect = READY_TO_NEW_ROUND;
-        return { ...state, currentGameState: newCurrentGameState }
+      if (newGameState.round < configs.maxTonesByLevel) {
+        newGameState.effect = READY_TO_NEW_ROUND;
+        return { texts, features, game: newGameState }
       }
 
-      increaseLevel();
+      newGameState.level++
+      newGameState.round = 0
+      newGameState.shuffledOrder = []
       // early return if is new level
-      if (newCurrentGameState.level < configs.maxLevel) {
-        newCurrentGameState.effect = READY_TO_NEW_LEVEL
-        return { ...state, currentGameState: newCurrentGameState }
+      if (newGameState.level < configs.maxLevel) {
+        newGameState.effect = READY_TO_NEW_LEVEL
+        return { texts, features, game: newGameState }
       }
 
       // userwins
-      newCurrentGameState.isClickAllowed = false;
-      newCurrentGameState.effect = USER_WINS
-      return { ...state, currentGameState: newCurrentGameState }
-    },
-
-    [PLAY_SEQUENCE]: () => {
-      const { shuffledOrder } = newCurrentGameState
-      newCurrentGameState.shuffledOrder = [...shuffledOrder, payload.newColor]
-      return { ...state, currentGameState: newCurrentGameState }
+      newGameState.isClickAllowed = false;
+      newGameState.effect = USER_WINS
+      return { texts, features, game: newGameState }
     },
 
     [START]: () => {
-      return {
-        ...state,
-        currentGameState: {
-          ...initialGameState,
-          level: configs.startLevel,
-          onGame: true,
-          effect: READY_TO_NEW_LEVEL
-        }
+      const newGameState = {
+        ...storage.initialGameState,
+        level: configs.startLevel,
+        onGame: true,
+        effect: READY_TO_NEW_LEVEL,
       }
+      return { texts, features, game: newGameState }
     },
 
     [STOP]: () => {
-      const message = payload.message || newCurrentGameState.message
-      return { ...state, currentGameState: { ...newCurrentGameState, message, effect: STOPPED, onGame: false, isClickAllowed: false } }
+      const message = payload.message || game.message
+      const newGameState = {
+        ...storage.initialGameState,
+        message,
+        effect: STOPPED,
+        onGame: false,
+        isClickAllowed: false
+      }
+      return { texts, features, game: newGameState }
     },
 
     [SET_MESSAGE]: () => {
       const { message } = payload
-      return { ...state, currentGameState: { ...newCurrentGameState, message } }
+      const newGameState = { ...game, message, }
+      return { texts, features, game: newGameState }
     },
 
     [ADD_NEW_COLOR]: () => {
-      return { ...state, currentGameState: { ...newCurrentGameState, shuffledOrder: [...newCurrentGameState.shuffledOrder, payload.newColor], effect: READY_TO_TRIGGER_BUTTONS, isClickAllowed: false } }
+      const { newColor } = payload
+      const newGameState = {
+        ...game,
+        shuffledOrder: [...game.shuffledOrder, newColor],
+        effect: READY_TO_TRIGGER_BUTTONS,
+        isClickAllowed: false
+      }
+      return { texts, features, game: newGameState }
     },
 
     [GAME_PASSIVE]: () => {
-      return { ...state, currentGameState: { ...newCurrentGameState, effect: WAITING_FOR_USER_CLICKS, isClickAllowed: true } }
+      const newGameState = {
+        ...game,
+        effect: WAITING_FOR_USER_CLICKS,
+        isClickAllowed: true
+      }
+      return { texts, features, game: newGameState }
     },
 
     [LOAD]: () => {
-      const index = data.textsStore.languages.findIndex(({ short }) => options.currentLanguage === short)
-      const texts = data.textsStore.texts[index]
-      return { ...state, texts, currentGameState: { ...newCurrentGameState, message: texts.topMessages.wellcomeMessage } }
+      const index = storage.textsStore.languages.findIndex(({ short }) => configs.currentLanguage === short)
+      const newTexts = storage.textsStore.texts[index]
+      const message = newTexts.wellcomeMessage
+      const newGameState = { ...game, message }
+      return { texts: newTexts, game: newGameState, features }
     },
 
     [CHANGE_LANGUAGE]: () => {
-      const index = data.textsStore.languages.findIndex(({ short }) => payload.lang === short)
-      const texts = data.textsStore.texts[index]
-      return { ...state, texts, currentGameState: newCurrentGameState }
+      const index = storage.textsStore.languages.findIndex(({ short }) => payload.lang === short)
+      const newTexts = storage.textsStore.texts[index]
+
+      let newMessage = ''
+      if (game.message) {
+        let textProp = null;
+        for (let prop in texts) {
+          if (texts[prop] === game.message) textProp = prop;
+        };
+        newMessage = newTexts[textProp]
+      }
+
+      const newGameState = { ...game, message: newMessage }
+
+      return { texts: newTexts, game: newGameState, features }
     },
   };
 
-  return actions[type]();
+  const newMutable = actions[type]();
 
+  return { configs, storage, mutable: newMutable }
 };
 
 export default reducer

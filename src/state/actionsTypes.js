@@ -1,5 +1,4 @@
 const CLICK = 'click';
-const PLAY_SEQUENCE = 'play-sequence';
 const START = 'start';
 const STOP = 'stop';
 const SET_MESSAGE = 'set-message';
@@ -8,4 +7,4 @@ const GAME_PASSIVE = 'game-passive';
 const LOAD = 'load';
 const CHANGE_LANGUAGE = 'change-language';
 
-export {CLICK, PLAY_SEQUENCE, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE};
+export { CLICK, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE };

@@ -11,14 +11,15 @@ const ColoredButton = styled.div`
 
     return `
       gridArea: ${position};
-      border: black solid 0.2vh;
+      box-sizing: border-box;
+      border: black solid 2px;
       background: linear-gradient(${colorFrom}, ${colorTo});
       border-${position}-radius: 100%;
       cursor: ${allowClick ? 'pointer' : 'default'};
       opacity: ${isOn ? '1' : '0.5'};
       ${allowClick &&
       `:hover {
-          border: white solid 0.2vh;
+          border: black solid 1px;
         }`
       }
 `}}`;
@@ -28,7 +29,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
   const [lightStatus, setLightStatus] = useState(false);
 
   useEffect(() => {
-    bindRef({ pulseButton, turnOn, turnOff });
+    bindRef({ turnOn, turnOff });
   }, []);
 
   const handleMouseDown = () => {
@@ -50,13 +51,6 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
   const turnOff = () => {
     setLightStatus(false)
     synth.triggerRelease();
-  };
-
-  const pulseButton = () => {
-    turnOn();
-    setTimeout(() => {
-      turnOff();
-    }, 200);
   };
 
   const handleTouchStart = (e) => {
