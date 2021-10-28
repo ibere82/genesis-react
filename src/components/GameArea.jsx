@@ -23,7 +23,7 @@ const Board = styled.div`
     width: 46vh;
     height: 46vh;
     top: calc(20%);
-    right: calc(50% - 34vh);
+    right: calc(50% - 28vh);
    }
 `;
 

@@ -23,7 +23,7 @@ const StyledPanel = styled.div`
    }
 `;
 
-export default function CenterPanel({ level, score }) {
+export default function CenterPanel({labels, level, score }) {
 
   const height = window.matchMedia("(min-width: 1000px)").matches ? '20pt' : '8pt'
 
@@ -32,7 +32,7 @@ export default function CenterPanel({ level, score }) {
 
       <div style={{ gridArea: '2 / 2 / 3 / 4' }}>
         <div style={{ textAlign: 'right', color: 'white' }}>
-          <span>Nível</span>
+          <span>{labels.levelLabel}</span>
         </div>
         <DigitalPanel
           number={level}
@@ -44,7 +44,7 @@ export default function CenterPanel({ level, score }) {
 
       <div style={{ gridArea: '4 / 2 / 5 / 4' }}>
         <div style={{ textAlign: 'right', color: 'white' }}>
-          <span>Pontos</span>
+          <span>{labels.scoreLabel}</span>
         </div>
         <DigitalPanel
           number={score}

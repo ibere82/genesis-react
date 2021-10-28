@@ -1,104 +1,82 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useReducer } from 'react';
+import reducer from './hooks/reducer';
+import { STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD } from './state/actionsTypes.js';
+import { INITIAL, READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS } from './state/effectsTypes.js'
 import * as Tone from 'tone';
-import buttons from './data/buttons.json';
-import levelTimes from './data/levelTimes.json';
-import winMusic from './data/winMusic.json';
-import gameOverMusic from './data/gameOverMusic.json';
 import Page from './components/Page';
+import appState from './state/appState.js';
 
 const synth = new Tone.AMSynth().toDestination();
 
-const MAX_TONES_BY_LEVEL = 8;
-const START_LEVEL = 1;
-const MAX_LEVEL = levelTimes.length;
-
 function App() {
-  const [shuffledOrder, setShuffledOrder] = useState([]);
-  const [turn, setTurn] = useState(0);
-  const [clickCount, setClickCount] = useState(0);
-  const [isClickAllowed, setIsClickAllowed] = useState(false);
-  const [level, setLevel] = useState(0);
-  const [score, setScore] = useState(0);
-  const [message, setMessage] = useState('Olá e Boas vindas!!!');
-  const { current } = useRef({ onGame: false });
-  const { onGame } = current;
+  const [state, dispatch] = useReducer(reducer, appState);
+  const { current } = useRef({ allowTriggerSound: false });
+
+  const { currentGameState, data, configs, texts } = state;
+  const { winMusic, gameOverMusic } = data;
+  const { levelTimes, buttons, maxLevel } = configs;
+  const { level, shuffledOrder, effect } = currentGameState;
+  const { topMessages } = texts;
+  const { nextLevelMessage, gameOverMessage, winMessages, } = topMessages
 
   useEffect(() => {
-    if (onGame) (async () => {
-      await manageEphemeralMessage(`Iniciando nível ${level}`);
-      setShuffledOrder([]);
-      setTurn(1);
-    })();
-  }, [level]);
 
-  useEffect(() => {
-    if (onGame) {
-      setClickCount(0);
-      setTimeout(() => {
-        addNewShuffledColor();
-      }, 500);
+    const effects = {
+      [INITIAL]: () => {
+        dispatch({ type: LOAD })
+      },
+
+      [READY_TO_NEW_LEVEL]: async () => {
+        current.allowTriggerSound = true;
+        await manageEphemeralMessage(`${nextLevelMessage} ${level}`);
+        if (current.allowTriggerSound) addNewShuffledColor();
+      },
+
+      [READY_TO_NEW_ROUND]: () => {
+        setTimeout(() => {
+          addNewShuffledColor();
+        }, 500);
+      },
+
+      [READY_TO_TRIGGER_BUTTONS]: async () => {
+        for (let color of shuffledOrder) {
+          if (current.allowTriggerSound) await scheduleOnOffPads(color, level - 1);
+        };
+        dispatch({ type: GAME_PASSIVE })
+      },
+
+      [GAME_OVER]: async () => {
+        dispatch({ type: SET_MESSAGE, payload: { message: gameOverMessage } })
+        await playGameOverMusic()
+        dispatch({ type: STOP })
+      },
+
+      [USER_WINS]: async () => {
+        dispatch({ type: SET_MESSAGE, payload: { message: winMessages[0] } })
+        await playVictoryShow();
+        dispatch({ type: STOP, payload: { message: winMessages[1] } })
+      },
+
+      [STOPPED]: () => {
+        synth.triggerRelease();
+        current.allowTriggerSound = false;
+      },
+
+      [WAITING_FOR_USER_CLICKS]: () => {
+        // TODO: after 3000ms ask user to play 
+      }
     };
-  }, [turn]);
 
-  useEffect(() => {
-    (async () => {
-      setIsClickAllowed(false);
-      for (let color of shuffledOrder) {
-        if (current.onGame) await scheduleOnOffPads(color, level - 1);
-      };
-      setIsClickAllowed(true);
-    })()
-  }, [shuffledOrder])
+    effects[effect]();
 
-  useEffect(() => {
-    setIsClickAllowed(message === '');
-  }, [message]);
-
-  const startNewGame = () => {
-    setScore(0);
-    setLevel(START_LEVEL);
-    current.onGame = true;
-  };
-
-  const stopGame = () => {
-    synth.triggerRelease();
-    current.onGame = false;
-    setLevel(0);
-    setTurn(0);
-  };
-
-  const gameOver = async () => {
-    setIsClickAllowed(false);
-    setMessage('Que pena! Você perdeu! Clique em Iniciar para recomeçar');
-    await playGameOverMusic()
-    stopGame()
-  };
-
-  const manageCorrectClick = () => {
-    setScore(score + (level * (MAX_TONES_BY_LEVEL)));
-    checkForNextTurn()
-  };
-
-  const checkForNextTurn = () => {
-    const newClickCount = clickCount + 1;
-    if (newClickCount === shuffledOrder.length) increaseTurn();
-    setClickCount(newClickCount);
-  };
-
-  const increaseTurn = () => {
-    (turn < MAX_TONES_BY_LEVEL) ? setTurn(turn + 1) : increaseLevel()
-  };
-
-  const increaseLevel = () => {
-    const newLevel = level + 1;
-    (newLevel > MAX_LEVEL) ? userWins() : setLevel(newLevel);
-  };
+  }, [effect]);
 
   const playGameOverMusic = () => {
     return new Promise((resolve) => {
       const now = Tone.now();
-      gameOverMusic.forEach((note, index) =>
-        synth.triggerAttackRelease(note, '8n', now + (index / 20)));
+      gameOverMusic.forEach((note, index) => {
+        synth.triggerAttackRelease(note, '8n', now + (index / 20))
+      });
       setTimeout(() => {
         resolve();
       }, 2500);
@@ -107,7 +85,7 @@ function App() {
 
   const addNewShuffledColor = async () => {
     const randomic = Math.floor(Math.random() * 4);
-    setShuffledOrder([...shuffledOrder, buttons[randomic].color]);
+    dispatch({ type: ADD_NEW_COLOR, payload: { newColor: buttons[randomic].color } })
   };
 
   const scheduleOnOffPads = (color, velocity) => {
@@ -127,35 +105,27 @@ function App() {
     });
   };
 
-  const userWins = async () => {
-    setMessage('Parabéns !!!!');
-    await playVictoryShow();
-    setMessage('Você venceu!! Clique em Iniciar para recomeçar');
-    stopGame();
-  };
-
   const playVictoryShow = () => {
     const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
       for (let index of wholeMusic) {
-        if (current.onGame) await scheduleOnOffPads(buttons[index].color, MAX_LEVEL - 1);
+        if (current.allowTriggerSound) await scheduleOnOffPads(buttons[index].color, maxLevel - 1);
       };
       resolve();
     });
   };
 
-  const handleClick = (color) => {
-    (shuffledOrder[clickCount] === color) ? manageCorrectClick() : gameOver();
-  };
-
   const manageEphemeralMessage = (text, timeBefore = 0, timeDuring = 2000, timeAfter = 2500) => {
     return new Promise((resolve) => {
+
       setTimeout(() => {
-        setMessage(text);
+        if (current.allowTriggerSound) dispatch({ type: SET_MESSAGE, payload: { message: text } })
       }, timeBefore);
+
       setTimeout(() => {
-        setMessage('');
+        if (current.allowTriggerSound) dispatch({ type: SET_MESSAGE, payload: { message: '' } })
       }, timeDuring);
+
       setTimeout(() => {
         resolve();
       }, timeAfter);
@@ -163,16 +133,10 @@ function App() {
   };
 
   return (
+
     <Page
-      onGame={onGame}
-      stopGame={stopGame}
-      startNewGame={startNewGame}
-      buttons={buttons}
-      isClickAllowed={isClickAllowed}
-      handleClick={handleClick}
-      message={message}
-      level={level}
-      score={score}
+      state={state}
+      dispatch={dispatch}
     />
   );
 };

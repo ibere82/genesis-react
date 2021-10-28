@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "languages": [
+    {
+      "short": "pt",
+      "whole": "Português",
+      "flagImg": "/flags/br.svg"
+    },
+    {
+      "short": "en",
+      "whole": "English",
+      "flagImg": "/flags/us.svg"
+    },
+    {
+      "short": "it",
+      "whole": "Italiano",
+      "flagImg": "/flags/it.svg"
+    }
+  ],
+  "texts": [
+    {
+      "topMessages": {
+        "wellcomeMessage": "Olá e Boas Vindas!!!",
+        "nextLevelMessage": "Iniciando nível ",
+        "abortedGameMessage": "Jogo Cancelado!",
+        "gameOverMessage": "Que pena! Você perdeu! Clique em Iniciar para recomeçar",
+        "winMessages": [
+          "Parabéns !!!!",
+          "Você venceu!! Clique em Iniciar para recomeçar"
+        ]
+      },
+      "labels": {
+        "levelLabel": "Nível",
+        "scoreLabel": "Pontos",
+        "startGameButtonLabel": "Iniciar",
+        "stopGameButtonLabel": "Cancelar"
+      }
+    },
+    {
+      "topMessages": {
+        "wellcomeMessage": "Hello and Welcome!!!",
+        "nextLevelMessage": "Starting level ",
+        "abortedGameMessage": "Game Canceled",
+        "gameOverMessage": "What a pity! You lost! Click Start to start over",
+        "winMessages": [
+          "Congratulations !!!!",
+          "You won!! Click Start to start over"
+        ]
+      },
+      "labels": {
+        "levelLabel": "Level",
+        "scoreLabel": "Score",
+        "startGameButtonLabel": "Start",
+        "stopGameButtonLabel": "Cancel"
+      }
+    },
+    {
+      "topMessages": {
+        "wellcomeMessage": "Ciao e Benvenuto!!!",
+        "nextLevelMessage": "Livello di partenza ",
+        "abortedGameMessage": "Partita Annullata",
+        "gameOverMessage": "Che peccato! Hai perso! Fare clic su Inizia per ricominciare",
+        "winMessages": [
+          "Congratulazioni!!!!",
+          "Hai vinto!! Fare clic su Inizia per ricominciare"
+        ]
+      },
+      "labels": {
+        "levelLabel": "Livello",
+        "scoreLabel": "Punti",
+        "startGameButtonLabel": "Inizia",
+        "stopGameButtonLabel": "Anulla"
+      }
+    }
+  ]
+}

@@ -16,6 +16,11 @@ const ColoredButton = styled.div`
       border-${position}-radius: 100%;
       cursor: ${allowClick ? 'pointer' : 'default'};
       opacity: ${isOn ? '1' : '0.5'};
+      ${allowClick &&
+      `:hover {
+          border: white solid 0.2vh;
+        }`
+      }
 `}}`;
 
 export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
