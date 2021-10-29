@@ -1,12 +1,22 @@
 import React from 'react'
 import Flag from './Flag'
+import styled from 'styled-components'
 
-export default function LangMenu({ langs, dispatch }) {
+const FlagContainer = styled.div`
+  display: flex;
+  margin-top: 15px;
+  margin-left: '15px';
+  max-width: 156px;
+  min-width: 156px;
+  min-height: 30px;
+  max-height: 30px;
+`;
+
+export default function LangMenu({ children = [] }) {
   return (
-    <div style={{ display: 'flex', marginTop: '15px', marginLeft: '15px', maxWidth: '156px', minWidth: '156px', minHeight: '30px', maxHeight: '30px'}}>
-      {langs.map(({ short, whole, flagImg }) => {
-        return <Flag key={short} src={flagImg} language={whole} dispatch={dispatch} short={short}/>
-      })}
-    </div>
+    <FlagContainer>
+      {children.map(child => child)}
+    </FlagContainer>
+
   )
 }

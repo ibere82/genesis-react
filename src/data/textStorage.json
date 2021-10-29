@@ -3,16 +3,19 @@
   "languages": [
     {
       "short": "pt",
+      "ISO": "pt-BR",
       "whole": "Português",
       "flagImg": "/flags/br.svg"
     },
     {
       "short": "en",
+      "ISO": "en-US",
       "whole": "English",
       "flagImg": "/flags/us.svg"
     },
     {
       "short": "it",
+      "ISO": "it-IT",
       "whole": "Italiano",
       "flagImg": "/flags/it.svg"
     }

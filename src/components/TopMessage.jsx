@@ -12,7 +12,7 @@ const TopMessageContainer = styled.div`
   padding: 0.5rem;
   border-radius: 3px;
   opacity: 0.7;
-  ${({ message }) => message && 'background-color: white;'}
+  ${({ enable }) => enable && 'background-color: white;'}
   
   @media(max-width: 800px) {
     font-size: 26px;
@@ -25,6 +25,6 @@ const TopMessageContainer = styled.div`
 export default function TopMessage({ message }) {
 
   return (
-    <TopMessageContainer message={message}>{message}</TopMessageContainer>
+    <TopMessageContainer enable={!!message}>{message}</TopMessageContainer>
   );
 };

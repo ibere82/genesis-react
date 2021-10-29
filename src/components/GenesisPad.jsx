@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Pad from './Pad';
 
 const StyledPad = styled.div`
   position: absolute;
@@ -23,22 +22,10 @@ const StyledPad = styled.div`
    }
 `;
 
-export default function GenesisPad({ buttons, isClickAllowed, handleClick }) {
+export default function GenesisPad({ children }) {
   return (
     <StyledPad>
-      {buttons.map(({ color, position, note, gradient }, index) => {
-        return (
-          <Pad
-            key={color}
-            color={color}
-            note={note}
-            gradient={gradient}
-            position={position}
-            allowClick={isClickAllowed}
-            handleClick={handleClick}
-            bindRef={(ref) => buttons[index].ref = ref} />
-        )
-      })}
+      {children.map(child => child)}
     </StyledPad>
   );
 };

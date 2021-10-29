@@ -1,5 +1,8 @@
-import { CLICK, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE } from '../state/actionsTypes.js';
-import { READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS } from '../state/effectsTypes.js'
+import { CLICK, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE, TURN_BUTTON_ON, TURN_BUTTON_OFF } from '../state/actionsTypes.js';
+import {
+  READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS, READY_TO_ATTACK_SOUND,
+  READY_TO_RELEASE_SOUND,
+} from '../state/effectsTypes.js'
 
 function reducer(state, { type, payload = {} }) {
 
@@ -9,124 +12,149 @@ function reducer(state, { type, payload = {} }) {
     mutable,
   } = state;
 
-  const { game, texts, features } = mutable
-
   const actions = {
 
     [CLICK]: () => {
 
-      const newGameState = { ...game }
+      let newMutable = { ...mutable }
 
       // early return if user loses
-      if (newGameState.shuffledOrder[newGameState.clickCount] !== payload.color) {
-        newGameState.isClickAllowed = false;
-        newGameState.effect = GAME_OVER;
-        return { texts, features, game: newGameState }
+      if (newMutable.shuffledOrder[newMutable.clickCount] !== payload.color) {
+        newMutable.isClickAllowed = false;
+        newMutable.effect = GAME_OVER;
+        return { ...newMutable }
       }
 
-      newGameState.clickCount++
-      newGameState.score += newGameState.level * configs.maxTonesByLevel
+      newMutable.clickCount++
+      newMutable.score += newMutable.level * configs.maxTonesByLevel
       // early return if the last click is correct but the click section is not finished
-      if (newGameState.clickCount !== newGameState.shuffledOrder.length) {
-        return { texts, features, game: newGameState }
+      if (newMutable.clickCount !== newMutable.shuffledOrder.length) {
+        return { ...newMutable }
       }
 
-      newGameState.clickCount = 0
-      newGameState.round++
-      newGameState.isClickAllowed = false
+      newMutable.clickCount = 0
+      newMutable.round++
+      newMutable.isClickAllowed = false
       //early return if is new round but not new level
-      if (newGameState.round < configs.maxTonesByLevel) {
-        newGameState.effect = READY_TO_NEW_ROUND;
-        return { texts, features, game: newGameState }
+      if (newMutable.round < configs.maxTonesByLevel) {
+        newMutable.effect = READY_TO_NEW_ROUND;
+        return { ...newMutable }
       }
 
-      newGameState.level++
-      newGameState.round = 0
-      newGameState.shuffledOrder = []
+      newMutable.level++
+      newMutable.round = 0
+      newMutable.shuffledOrder = []
+      const { buttons, timeToTurnOff, timeToResolve } = storage.levelInfos[newMutable.level - 1];
+      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }))
+      newMutable.buttons = newButtons
+      newMutable.timeToTurnOff = timeToTurnOff
+      newMutable.timeToResolve = timeToResolve
       // early return if is new level
-      if (newGameState.level < configs.maxLevel) {
-        newGameState.effect = READY_TO_NEW_LEVEL
-        return { texts, features, game: newGameState }
+      if (newMutable.level < configs.maxLevel) {
+        newMutable.effect = READY_TO_NEW_LEVEL
+        return { ...newMutable }
       }
 
       // userwins
-      newGameState.isClickAllowed = false;
-      newGameState.effect = USER_WINS
-      return { texts, features, game: newGameState }
+      newMutable.isClickAllowed = false;
+      newMutable.effect = USER_WINS
+      return { ...newMutable }
+    },
+
+    [TURN_BUTTON_ON]: () => {
+      let noteToTrigger = ''
+      const newButtons = mutable.buttons.map(button => {
+        const newButton = { ...button }
+        if (button.color === payload.color) {
+          newButton.isLightOn = true
+          noteToTrigger = button.note
+        }
+
+        return newButton
+      })
+      return { ...mutable, buttons: newButtons, effect: READY_TO_ATTACK_SOUND, noteToTrigger }
+    },
+
+    [TURN_BUTTON_OFF]: () => {
+      const newButtons = mutable.buttons.map(button => {
+        const newButton = { ...button }
+        if (button.color === payload.color) newButton.isLightOn = false
+        return newButton
+      })
+      return { ...mutable, buttons: newButtons, effect: READY_TO_RELEASE_SOUND }
+
     },
 
     [START]: () => {
-      const newGameState = {
-        ...storage.initialGameState,
+      const newMutable = {
+        ...mutable,
+        shuffledOrder: [],
+        round: 0,
+        clickCount: 0,
+        isClickAllowed: false,
+        score: 0,
+        message: '',
         level: configs.startLevel,
         onGame: true,
         effect: READY_TO_NEW_LEVEL,
       }
-      return { texts, features, game: newGameState }
+      return { ...newMutable }
     },
 
     [STOP]: () => {
-      const message = payload.message || game.message
-      const newGameState = {
-        ...storage.initialGameState,
+      const message = payload.message || mutable.message
+      const newMutable = {
+        ...mutable,
         message,
         effect: STOPPED,
         onGame: false,
         isClickAllowed: false
       }
-      return { texts, features, game: newGameState }
+      return { ...newMutable }
     },
 
     [SET_MESSAGE]: () => {
       const { message } = payload
-      const newGameState = { ...game, message, }
-      return { texts, features, game: newGameState }
+      const newMutable = { ...mutable, message, }
+      return { ...newMutable }
     },
 
     [ADD_NEW_COLOR]: () => {
       const { newColor } = payload
-      const newGameState = {
-        ...game,
-        shuffledOrder: [...game.shuffledOrder, newColor],
+      const newMutable = {
+        ...mutable,
+        shuffledOrder: [...mutable.shuffledOrder, newColor],
         effect: READY_TO_TRIGGER_BUTTONS,
         isClickAllowed: false
       }
-      return { texts, features, game: newGameState }
+      return { ...newMutable }
     },
 
     [GAME_PASSIVE]: () => {
-      const newGameState = {
-        ...game,
+      const newMutable = {
+        ...mutable,
         effect: WAITING_FOR_USER_CLICKS,
         isClickAllowed: true
       }
-      return { texts, features, game: newGameState }
+      return { ...newMutable }
     },
 
     [LOAD]: () => {
-      const index = storage.textsStore.languages.findIndex(({ short }) => configs.currentLanguage === short)
-      const newTexts = storage.textsStore.texts[index]
-      const message = newTexts.wellcomeMessage
-      const newGameState = { ...game, message }
-      return { texts: newTexts, game: newGameState, features }
+      const index = storage.textStorage.languages.findIndex(({ short }) => configs.currentLanguage === short)
+      const texts = storage.textStorage.texts[index]
+      const message = texts.wellcomeMessage
+      const { buttons, timeToTurnOff, timeToResolve } = storage.levelInfos[configs.startLevel - 1];
+      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }))
+      const newMutable = { ...mutable, buttons: newButtons, texts, message, timeToTurnOff, timeToResolve, }
+      return { ...newMutable }
     },
 
     [CHANGE_LANGUAGE]: () => {
-      const index = storage.textsStore.languages.findIndex(({ short }) => payload.lang === short)
-      const newTexts = storage.textsStore.texts[index]
-
-      let newMessage = ''
-      if (game.message) {
-        let textProp = null;
-        for (let prop in texts) {
-          if (texts[prop] === game.message) textProp = prop;
-        };
-        newMessage = newTexts[textProp]
-      }
-
-      const newGameState = { ...game, message: newMessage }
-
-      return { texts: newTexts, game: newGameState, features }
+      const index = storage.textStorage.languages.findIndex(({ short }) => payload.lang === short)
+      const texts = storage.textStorage.texts[index]
+      const message = mutable.onGame ? '' : texts.wellcomeMessage
+      const newMutable = { ...mutable, message, texts }
+      return { ...newMutable }
     },
   };
 

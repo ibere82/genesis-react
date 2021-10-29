@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { EventInjector } from 'react-event-injector';
 import * as Tone from 'tone';
 import styled from 'styled-components';
+import { CLICK, TURN_BUTTON_ON, TURN_BUTTON_OFF } from '../state/actionsTypes.js';
+
 
 const synth = new Tone.AMSynth().toDestination();
 
@@ -24,33 +26,17 @@ const ColoredButton = styled.div`
       }
 `}}`;
 
-export default function Pad({ color, gradient, allowClick, position, bindRef, note, handleClick }) {
-
-  const [lightStatus, setLightStatus] = useState(false);
-
-  useEffect(() => {
-    bindRef({ turnOn, turnOff });
-  }, []);
+export default function Pad({ color, gradient, allowClick, position, dispatch, isLightOn }) {
 
   const handleMouseDown = () => {
-    if (allowClick) turnOn();
+    if (allowClick) dispatch({ type: TURN_BUTTON_ON, payload: { color } })
   };
 
   const handleMouseUp = () => {
-    if (lightStatus) {
-      turnOff();
-      handleClick(color);
+    if (isLightOn) {
+      dispatch({ type: TURN_BUTTON_OFF, payload: { color } })
+      dispatch({ type: CLICK, payload: { color } })
     };
-  };
-
-  const turnOn = () => {
-    setLightStatus(true)
-    synth.triggerAttack(note);
-  };
-
-  const turnOff = () => {
-    setLightStatus(false)
-    synth.triggerRelease();
   };
 
   const handleTouchStart = (e) => {
@@ -66,7 +52,7 @@ export default function Pad({ color, gradient, allowClick, position, bindRef, no
       onTouchEnd={handleMouseUp}
       settings={{ passive: false }}
     >
-      <ColoredButton position={position} gradient={gradient} allowClick={allowClick} isOn={lightStatus} />
+      <ColoredButton position={position} gradient={gradient} allowClick={allowClick} isOn={isLightOn} />
     </EventInjector>
   );
 };

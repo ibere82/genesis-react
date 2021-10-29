@@ -1,22 +1,19 @@
 import { useEffect, useRef, useReducer } from 'react';
-import reducer from './hooks/reducer';
-import { STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD } from './state/actionsTypes.js';
-import { INITIAL, READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS } from './state/effectsTypes.js'
 import * as Tone from 'tone';
-import Page from './components/Page';
+import reducer from './hooks/reducer';
 import appState from './state/appState.js';
+import Page from './components/Page';
+
+import { STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, TURN_BUTTON_ON, TURN_BUTTON_OFF } from './state/actionsTypes.js';
+import { INITIAL, READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS, READY_TO_ATTACK_SOUND, READY_TO_RELEASE_SOUND } from './state/effectsTypes.js'
 
 const synth = new Tone.AMSynth().toDestination();
 
 function App() {
   const [state, dispatch] = useReducer(reducer, appState);
   const { current } = useRef({ onGameRightNow: false });
-
-  const { mutable, configs } = state;
-  const { game, texts, features } = mutable
-  const { winMusic, gameOverMusic, levelTimes, buttons } = features;
-  const { maxLevel } = configs;
-  const { level, shuffledOrder, effect } = game;
+  const { mutable } = state;
+  const { winMusic, gameOverMusic, buttons, level, shuffledOrder, effect, texts, noteToTrigger } = mutable
   const { nextLevelMessage, gameOverMessage, winMessages, } = texts
 
   useEffect(() => {
@@ -40,7 +37,7 @@ function App() {
 
       [READY_TO_TRIGGER_BUTTONS]: async () => {
         for (let color of shuffledOrder) {
-          if (current.onGameRightNow) await scheduleOnOffPads(color, level - 1);
+          if (current.onGameRightNow) await scheduleOnOffPads(color);
         };
         dispatch({ type: GAME_PASSIVE })
       },
@@ -60,6 +57,15 @@ function App() {
       [STOPPED]: () => {
         synth.triggerRelease();
         current.onGameRightNow = false;
+      },
+
+
+      [READY_TO_ATTACK_SOUND]: () => {
+        synth.triggerAttack(noteToTrigger);
+      },
+
+      [READY_TO_RELEASE_SOUND]: () => {
+        synth.triggerRelease();
       },
 
       [WAITING_FOR_USER_CLICKS]: () => {
@@ -88,16 +94,15 @@ function App() {
     dispatch({ type: ADD_NEW_COLOR, payload: { newColor: buttons[randomic].color } })
   };
 
-  const scheduleOnOffPads = (color, velocity) => {
-    const { timeToTurnOff, timeToResolve } = levelTimes[velocity];
-    const { ref } = buttons.find(button => button.color === color);
+  const scheduleOnOffPads = (color) => {
+    const { timeToTurnOff, timeToResolve } = mutable;
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        ref.turnOn();
+        dispatch({ type: TURN_BUTTON_ON, payload: { color } })
       }, 10);
       setTimeout(() => {
-        ref.turnOff();
+        dispatch({ type: TURN_BUTTON_OFF, payload: { color } })
       }, timeToTurnOff);
       setTimeout(() => {
         resolve();
@@ -109,7 +114,7 @@ function App() {
     const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
       for (let index of wholeMusic) {
-        if (current.onGameRightNow) await scheduleOnOffPads(buttons[index].color, maxLevel - 1);
+        if (current.onGameRightNow) await scheduleOnOffPads(buttons[index].color);
       };
       resolve();
     });

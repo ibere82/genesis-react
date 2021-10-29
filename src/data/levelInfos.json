@@ -1,0 +1,114 @@
+[
+    {
+        "timeToTurnOff": "500",
+        "timeToResolve": "750",
+        "buttons": [
+            {
+                "color": "green",
+                "gradient": [
+                    "#00ff00",
+                    "#60ff60"
+                ],
+                "note": "G4",
+                "position": "top-left"
+            },
+            {
+                "color": "red",
+                "gradient": [
+                    "#ff0000",
+                    "#ff6060"
+                ],
+                "note": "C5",
+                "position": "top-right"
+            },
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#ffff00",
+                    "#ffff99"
+                ],
+                "note": "E4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "blue",
+                "gradient": [
+                    "#0000bb",
+                    "#6060bb"
+                ],
+                "note": "C4",
+                "position": "bottom-right"
+            }
+        ]
+    },
+    {
+        "timeToTurnOff": "400",
+        "timeToResolve": "625",
+        "buttons": [
+            {
+                "color": "green",
+                "gradient": [
+                    "#00ff00",
+                    "#60ff60"
+                ],
+                "note": "A4",
+                "position": "top-left"
+            },
+            {
+                "color": "red",
+                "gradient": [
+                    "#ff0000",
+                    "#ff6060"
+                ],
+                "note": "D5",
+                "position": "top-right"
+            },
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#ffff00",
+                    "#ffff99"
+                ],
+                "note": "F4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "blue",
+                "gradient": [
+                    "#0000bb",
+                    "#6060bb"
+                ],
+                "note": "D4",
+                "position": "bottom-right"
+            }
+        ]
+    },
+    {
+        "timeToTurnOff": "300",
+        "timeToResolve": "400"
+    },
+    {
+        "timeToTurnOff": "200",
+        "timeToResolve": "275"
+    },
+    {
+        "timeToTurnOff": "100",
+        "timeToResolve": "150"
+    },
+    {
+        "timeToTurnOff": " 75",
+        "timeToResolve": "100"
+    },
+    {
+        "timeToTurnOff": " 50",
+        "timeToResolve": "75"
+    },
+    {
+        "timeToTurnOff": " 40",
+        "timeToResolve": "60"
+    },
+    {
+        "timeToTurnOff": " 30",
+        "timeToResolve": "40"
+    }
+]

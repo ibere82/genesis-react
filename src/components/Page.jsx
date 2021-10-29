@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import StartPauseButton from './StartPauseButton';
 import Footer from './Footer';
 import LangMenu from './LangMenu';
+import Flag from './Flag';
+import Pad from './Pad';
 import IconsArea from './IconsArea';
 import GameArea from './GameArea';
 import GenesisPad from './GenesisPad';
 import CenterPanel from './CenterPanel';
 import TopMessage from './TopMessage';
-import { CLICK, START, STOP, } from '../state/actionsTypes.js';
+import { START, STOP, } from '../state/actionsTypes.js';
 
 
 const Main = styled.main`
@@ -21,19 +23,10 @@ const ButtonContainer = styled.div`
   right: 100px;
 `;
 
-export default function Page({  dispatch, mutable }) {
+export default function Page({ dispatch, mutable }) {
 
-  const { game, texts, features } = mutable
-
-  const { level, message, isClickAllowed, onGame, score } = game;
+  const { texts, level, message, isClickAllowed, onGame, score, buttons, languages } = mutable
   const { abortedGameMessage, stopGameButtonLabel, startGameButtonLabel } = texts
-  const { buttons, languages } = features;
-
-
-
-  const handleClick = (color) => {
-    dispatch({ type: CLICK, payload: { color } })
-  }
 
   const startNewGame = () => {
     dispatch({ type: START })
@@ -46,9 +39,29 @@ export default function Page({  dispatch, mutable }) {
   return (
     <>
       <Main>
-        <LangMenu langs={languages} dispatch={dispatch} />
+
+        <LangMenu>
+          {languages.map(({ short, whole, flagImg }) => {
+            return <Flag key={short} src={flagImg} language={whole} dispatch={dispatch} short={short} />
+          })}
+        </LangMenu>
+
         <GameArea message={message}>
-          <GenesisPad buttons={buttons} isClickAllowed={isClickAllowed} handleClick={(color) => handleClick(color)} />
+          <GenesisPad>
+            {buttons.map(({ color, position, gradient, isLightOn }) => {
+              return (
+                <Pad
+                  key={color}
+                  color={color}
+                  gradient={gradient}
+                  isLightOn={isLightOn}
+                  position={position}
+                  allowClick={isClickAllowed}
+                  dispatch={dispatch}
+                />
+              )
+            })}
+          </GenesisPad>
           <CenterPanel labels={texts} level={level} score={score} />
           <TopMessage message={message} />
         </GameArea>

@@ -1,14 +1,14 @@
 import buttons from '../data/buttons.json';
-import levelTimes from '../data/levelTimes.json';
+import levelInfos from '../data/levelInfos.json';
 import winMusic from '../data/winMusic.json';
 import gameOverMusic from '../data/gameOverMusic.json';
-import textsStore from '../data/textsStore.json'
+import textStorage from '../data/textStorage.json'
 import { INITIAL } from '../state/effectsTypes.js'
 
 // configs
 const MAX_TONES_BY_LEVEL = 2;
-const START_LEVEL = 8;
-const MAX_LEVEL = levelTimes.length;
+const START_LEVEL = 1;
+const MAX_LEVEL = levelInfos.length;
 
 const initialGameState = {
   effect: INITIAL,
@@ -26,32 +26,27 @@ const configs = {
   maxTonesByLevel: MAX_TONES_BY_LEVEL,
   startLevel: START_LEVEL,
   maxLevel: MAX_LEVEL,
-  currentLanguage: 'pt'
+  defaultLanguage: 'pt',
+  currentLanguage: 'pt',
 }
 
 const appState = {
   mutable: {
-    game: { ...initialGameState },
-    texts: {
-      wellcomeMessage: "",
-      nextLevelMessage: "",
-      abortedGameMessage: "",
-      gameOverMessage: "",
-      winMessages: [],
-      levelLabel: "",
-      scoreLabel: "",
-      startGameButtonLabel: "",
-      stopGameButtonLabel: ""
-    },
-    features: {
-      timeToTurnOff: null,
-      timeToResolve: null,
-      levelTimes,
-      buttons,
-      winMusic,
-      gameOverMusic,
-      languages: textsStore.languages,
-    }
+    ...initialGameState,
+    noteToTrigger: '',
+    message: '',
+    isClickAllowed: false,
+    buttons: [
+
+    ],
+    timeToTurnOff: null,
+    timeToResolve: null,
+    currentLanguage: '',
+    languages: textStorage.languages,
+    texts: {},
+    levelInfos,
+    winMusic,
+    gameOverMusic,
   },
 
   configs: {
@@ -59,10 +54,9 @@ const appState = {
   },
 
   storage: {
-    textsStore,
-    levelTimes,
+    textStorage,
+    levelInfos,
     buttons,
-    initialGameState,
   }
 }
 
