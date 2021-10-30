@@ -1,7 +1,7 @@
 // Original Svg created by potrace 1.15, written by Peter Selinger 2001-2017
-// Adapted to a dynamic react component by Iberê Abondanza Kuhlmann
+// Adapted to a dynamic React Component by Iberê Abondanza Kuhlmann
 
-const paths = [
+const allPaths = [
   `M1385 12396 c-214 -222 -390 -408 -390 -414 0 -6 177 -193 394 -416 l394 -406
    1471 0 1471 1 420 400 c231 221 421 404 423 408 1 4 -184 192 -411 419 l-414 
    412 -1484 0 -1484 0 -390 -404z`,
@@ -46,6 +46,8 @@ const pathsFromDigit = [
 
 export default function DigitalNumber({ digit = 0, color = 'red', width = '13pt', height = '26pt' }) {
 
+  const pathsToShow = pathsFromDigit[digit].paths.map((path, key) => <path key={key} d={allPaths[path]} />)
+
   return (
     <div style={{ marginRight: '2px' }}>
       <svg
@@ -65,7 +67,7 @@ export default function DigitalNumber({ digit = 0, color = 'red', width = '13pt'
           stroke="none"
           fill={color}>
 
-          {pathsFromDigit[digit].paths.map((path, key) => <path key={key} d={paths[path]} />)}
+          {pathsToShow}
 
         </g>
       </svg>

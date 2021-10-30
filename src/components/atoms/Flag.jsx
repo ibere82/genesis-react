@@ -1,6 +1,5 @@
-import React from 'react'
 import styled from 'styled-components';
-import { CHANGE_LANGUAGE } from '../state/actionsTypes';
+import { CHANGE_LANGUAGE } from '../../state/actionsTypes';
 
 const StyledFlag = styled.img`
   padding-left: 3px;
@@ -26,5 +25,5 @@ export default function Flag({ src, language, dispatch, short }) {
       alt={language}
       title={language}
     />
-  )
-}
+  );
+};

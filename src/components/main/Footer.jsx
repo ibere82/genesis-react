@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Link = styled.a`
-  color: inherit;
+  color: rgb(0, 112, 243);
   text-decoration: none;
 `;
 
@@ -9,9 +9,9 @@ export default function Footer() {
 
   return (
     <footer style={{ borderTop: 'gray solid 2px', textAlign: 'center' }}>
-      <p>&nbsp;
+      <p>Developed by&nbsp;
         <Link target="_blank" rel="noreferrer" href="https://github.com/ibere82" title={"Iberê' s linkedin page"}>
-          Developed by Iberê Abondanza Kuhlmann
+          Iberê Abondanza Kuhlmann
         </Link>
       </p>
       <p>Based on&nbsp;

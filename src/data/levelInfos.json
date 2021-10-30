@@ -1,13 +1,18 @@
 [
     {
-        "timeToTurnOff": "500",
-        "timeToResolve": "750",
+        "timeToTurnOff": 500,
+        "timeToResolve": 750,
+        "rounds": 8,
+        "pointsOnCorrectClick": 1,
+        "bonusForFinishedRound": 10,
+        "bonusForFinishedLevel": 150,
+        "roundedScoreOnLevelEnd": 300,
         "buttons": [
             {
                 "color": "green",
                 "gradient": [
-                    "#00ff00",
-                    "#60ff60"
+                    "#446639",
+                    "#1d660a"
                 ],
                 "note": "G4",
                 "position": "top-left"
@@ -36,47 +41,99 @@
                     "#0000bb",
                     "#6060bb"
                 ],
-                "note": "C4",
+                "note": "A4",
                 "position": "bottom-right"
             }
         ]
     },
     {
-        "timeToTurnOff": "400",
-        "timeToResolve": "625",
+        "timeToTurnOff": 450,
+        "timeToResolve": 675,
+        "rounds": 8,
+        "pointsOnCorrectClick": 2,
+        "bonusForFinishedRound": 20,
+        "bonusForFinishedLevel": 250,
+        "roundedScoreOnLevelEnd": 800,
         "buttons": [
             {
-                "color": "green",
+                "color": "orange",
                 "gradient": [
-                    "#00ff00",
-                    "#60ff60"
+                    "#fea220",
+                    "#fea24d"
                 ],
-                "note": "A4",
+                "note": "D4",
                 "position": "top-left"
             },
             {
-                "color": "red",
+                "color": "violet",
                 "gradient": [
-                    "#ff0000",
-                    "#ff6060"
+                    "#b366be",
+                    "#944dfe"
                 ],
-                "note": "D5",
+                "note": "A4",
                 "position": "top-right"
             },
             {
-                "color": "yellow",
+                "color": "lightGreen",
                 "gradient": [
-                    "#ffff00",
-                    "#ffff99"
+                    "#00ff00",
+                    "#60ff60"
                 ],
                 "note": "F4",
                 "position": "bottom-left"
             },
             {
-                "color": "blue",
+                "color": "darkRed",
                 "gradient": [
-                    "#0000bb",
-                    "#6060bb"
+                    "#d71824",
+                    "#f50820"
+                ],
+                "note": "C5",
+                "position": "bottom-right"
+            }
+        ]
+    },
+    {
+        "timeToTurnOff": 400,
+        "timeToResolve": 500,
+        "rounds": 9,
+        "pointsOnCorrectClick": 3,
+        "bonusForFinishedRound": 35,
+        "bonusForFinishedLevel": 500,
+        "roundedScoreOnLevelEnd": 2000,
+        "buttons": [
+            {
+                "color": "green",
+                "gradient": [
+                    "#91a646",
+                    "#6d8222"
+                ],
+                "note": "D5",
+                "position": "top-left"
+            },
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#ffcd36",
+                    "#f2b705"
+                ],
+                "note": "B4",
+                "position": "top-right"
+            },
+            {
+                "color": "orange",
+                "gradient": [
+                    "#ff920c",
+                    "#d97904"
+                ],
+                "note": "G4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "brown",
+                "gradient": [
+                    "#6e0202",
+                    "#592602"
                 ],
                 "note": "D4",
                 "position": "bottom-right"
@@ -84,31 +141,332 @@
         ]
     },
     {
-        "timeToTurnOff": "300",
-        "timeToResolve": "400"
+        "timeToTurnOff": 350,
+        "timeToResolve": 525,
+        "rounds": 9,
+        "pointsOnCorrectClick": 4,
+        "bonusForFinishedRound": 50,
+        "bonusForFinishedLevel": 700,
+        "roundedScoreOnLevelEnd": 3500,
+        "buttons": [
+            {
+                "color": "pink",
+                "gradient": [
+                    "#cd8ebc",
+                    "#a67298"
+                ],
+                "note": "C5",
+                "position": "top-left"
+            },
+            {
+                "color": "ligtGreen",
+                "gradient": [
+                    "#c2d991",
+                    "#a9bf7a"
+                ],
+                "note": "G4",
+                "position": "top-right"
+            },
+            {
+                "color": "salmon",
+                "gradient": [
+                    "#ffcaab",
+                    "#f2af88"
+                ],
+                "note": "E4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "brown",
+                "gradient": [
+                    "#bf6e50",
+                    "#9d5940"
+                ],
+                "note": "C4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": "200",
-        "timeToResolve": "275"
+        "timeToTurnOff": 300,
+        "timeToResolve": 450,
+        "rounds": 10,
+        "pointsOnCorrectClick": 5,
+        "bonusForFinishedRound": 75,
+        "bonusForFinishedLevel": 1200,
+        "roundedScoreOnLevelEnd": 6000,
+        "buttons": [
+            {
+                "color": "greenDarker",
+                "gradient": [
+                    "#34401a",
+                    "#181d0c"
+                ],
+                "note": "D5",
+                "position": "top-left"
+            },
+            {
+                "color": "greenDark",
+                "gradient": [
+                    "#788a39",
+                    "#64732f"
+                ],
+                "note": "B4",
+                "position": "top-right"
+            },
+            {
+                "color": "greenLightest",
+                "gradient": [
+                    "#e9fa6b",
+                    "#cad959"
+                ],
+                "note": "G#4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "greenLight",
+                "gradient": [
+                    "#b4bf5e",
+                    "#a1ab51"
+                ],
+                "note": "E4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": "100",
-        "timeToResolve": "150"
+        "timeToTurnOff": 250,
+        "timeToResolve": 375,
+        "rounds": 10,
+        "pointsOnCorrectClick": 6,
+        "bonusForFinishedRound": 100,
+        "bonusForFinishedLevel": 1500,
+        "roundedScoreOnLevelEnd": 10000,
+        "buttons": [
+            {
+                "color": "violet",
+                "gradient": [
+                    "#9f48d9",
+                    "#620a9d"
+                ],
+                "note": "A4",
+                "position": "top-left"
+            },
+            {
+                "color": "blue",
+                "gradient": [
+                    "#0f7cbf",
+                    "#0d92e4"
+                ],
+                "note": "C5",
+                "position": "top-right"
+            },
+            {
+                "color": "orange",
+                "gradient": [
+                    "#f29f05",
+                    "#c98402"
+                ],
+                "note": "E4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#f2cb05",
+                    "#ffda1c"
+                ],
+                "note": "G4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": " 75",
-        "timeToResolve": "100"
+        "timeToTurnOff": 200,
+        "timeToResolve": 300,
+        "rounds": 11,
+        "pointsOnCorrectClick": 7,
+        "bonusForFinishedRound": 200,
+        "bonusForFinishedLevel": 3500,
+        "roundedScoreOnLevelEnd": 20000,
+        "buttons": [
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#ffce3c",
+                    "#f2b705"
+                ],
+                "note": "C#5",
+                "position": "top-left"
+            },
+            {
+                "color": "darkOrange",
+                "gradient": [
+                    "#d97904",
+                    "#9c5602"
+                ],
+                "note": "A4",
+                "position": "top-right"
+            },
+            {
+                "color": "orange",
+                "gradient": [
+                    "#e9691f",
+                    "#f25c05"
+                ],
+                "note": "G4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "red",
+                "gradient": [
+                    "#f23e2e",
+                    "#b81e10"
+                ],
+                "note": "D#4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": " 50",
-        "timeToResolve": "75"
+        "timeToTurnOff": 150,
+        "timeToResolve": 225,
+        "rounds": 11,
+        "pointsOnCorrectClick": 8,
+        "bonusForFinishedRound": 300,
+        "bonusForFinishedLevel": 5000,
+        "roundedScoreOnLevelEnd": 40000,
+        "buttons": [
+            {
+                "color": "pink",
+                "gradient": [
+                    "#ff70b3",
+                    "#bf3978"
+                ],
+                "note": "D5",
+                "position": "top-left"
+            },
+            {
+                "color": "lightPink",
+                "gradient": [
+                    "#ffd9eb",
+                    "#d9a3bc"
+                ],
+                "note": "C5",
+                "position": "top-right"
+            },
+            {
+                "color": "lightBrown",
+                "gradient": [
+                    "#e9a99a",
+                    "#bf8173"
+                ],
+                "note": "F#4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "brown",
+                "gradient": [
+                    "#8c4242",
+                    "#542121"
+                ],
+                "note": "D4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": " 40",
-        "timeToResolve": "60"
+        "timeToTurnOff": 100,
+        "timeToResolve": 150,
+        "rounds": 12,
+        "pointsOnCorrectClick": 9,
+        "bonusForFinishedRound": 400,
+        "bonusForFinishedLevel": 8000,
+        "roundedScoreOnLevelEnd": 70000,
+        "buttons": [
+            {
+                "color": "lightBlue",
+                "gradient": [
+                    "#2281fc",
+                    "#034aa6"
+                ],
+                "note": "F5",
+                "position": "top-left"
+            },
+            {
+                "color": "darkBlue",
+                "gradient": [
+                    "#0a3873",
+                    "#042249"
+                ],
+                "note": "B4",
+                "position": "top-right"
+            },
+            {
+                "color": "green",
+                "gradient": [
+                    "#6cd44f",
+                    "#69a658"
+                ],
+                "note": "G4",
+                "position": "bottom-left"
+            },
+            {
+                "color": "brown",
+                "gradient": [
+                    "#733729",
+                    "#371d17"
+                ],
+                "note": "D4",
+                "position": "bottom-right"
+            }
+        ]
     },
     {
-        "timeToTurnOff": " 30",
-        "timeToResolve": "40"
+        "timeToTurnOff": 50,
+        "timeToResolve": 75,
+        "rounds": 12,
+        "pointsOnCorrectClick": 10,
+        "bonusForFinishedRound": 1000,
+        "bonusForFinishedLevel": 50000,
+        "roundedScoreOnLevelEnd": 100000,
+        "buttons": [
+            {
+                "color": "blue",
+                "gradient": [
+                    "#1b378c",
+                    "#141f42"
+                ],
+                "note": "G4",
+                "position": "top-left"
+            },
+            {
+                "color": "green",
+                "gradient": [
+                    "#0bd904",
+                    "#68f463"
+                ],
+                "note": "C5",
+                "position": "top-right"
+            },
+            {
+                "color": "yellow",
+                "gradient": [
+                    "#ffb731",
+                    "#f29f05"
+                ],
+                "note": "E5",
+                "position": "bottom-left"
+            },
+            {
+                "color": "red",
+                "gradient": [
+                    "#ab0303",
+                    "#f23535"
+                ],
+                "note": "C4",
+                "position": "bottom-right"
+            }
+        ]
     }
 ]

@@ -15,7 +15,7 @@ const StyledButton = styled.button`
     border: lightgrey solid 0.5vh;
   }
   
-  @media(max-width: 800px) {
+  @media(max-width: 600px) {
     height: 50px;
     width: 90px;
    }

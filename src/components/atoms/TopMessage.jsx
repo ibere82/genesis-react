@@ -14,7 +14,7 @@ const TopMessageContainer = styled.div`
   opacity: 0.7;
   ${({ enable }) => enable && 'background-color: white;'}
   
-  @media(max-width: 800px) {
+  @media(max-width: 600px) {
     font-size: 26px;
     width: 32vh;
     top: calc(50% - 14vh);

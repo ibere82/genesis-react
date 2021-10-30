@@ -6,8 +6,8 @@ const GAME_OVER = 'game-over';
 const USER_WINS = 'user-wins';
 const STOPPED = 'stopped';
 const WAITING_FOR_USER_CLICKS = 'waiting-for-user-clicks';
-const READY_TO_ATTACK_SOUND = 'ready-to-attack-sound'
-const READY_TO_RELEASE_SOUND = 'ready-to-release-sound'
+const READY_TO_ATTACK_SOUND = 'ready-to-attack-sound';
+const READY_TO_RELEASE_SOUND = 'ready-to-release-sound';
 
 export {
   INITIAL,

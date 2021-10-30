@@ -1,166 +1,204 @@
-import { CLICK, START, STOP, SET_MESSAGE, ADD_NEW_COLOR, GAME_PASSIVE, LOAD, CHANGE_LANGUAGE, TURN_BUTTON_ON, TURN_BUTTON_OFF } from '../state/actionsTypes.js';
-import {
-  READY_TO_NEW_LEVEL, READY_TO_NEW_ROUND, READY_TO_TRIGGER_BUTTONS, GAME_OVER, USER_WINS, STOPPED, WAITING_FOR_USER_CLICKS, READY_TO_ATTACK_SOUND,
+import * as actionTypes from '../state/actionsTypes.js';
+import * as effectTypes from '../state/effectsTypes.js';
+import * as data from '../data';
+import config from '../config';
+
+const {
+  CLICK,
+  START,
+  STOP,
+  SET_MESSAGE,
+  ADD_NEW_COLOR,
+  GAME_PASSIVE,
+  LOAD,
+  CHANGE_LANGUAGE,
+  TURN_BUTTON_ON,
+  TURN_BUTTON_OFF,
+} = actionTypes;
+
+const {
+  READY_TO_NEW_LEVEL,
+  READY_TO_NEW_ROUND,
+  READY_TO_TRIGGER_BUTTONS,
+  GAME_OVER,
+  USER_WINS,
+  STOPPED,
+  WAITING_FOR_USER_CLICKS,
+  READY_TO_ATTACK_SOUND,
   READY_TO_RELEASE_SOUND,
-} from '../state/effectsTypes.js'
+} = effectTypes;
 
 function reducer(state, { type, payload = {} }) {
-
-  const {
-    configs,
-    storage,
-    mutable,
-  } = state;
 
   const actions = {
 
     [CLICK]: () => {
 
-      let newMutable = { ...mutable }
+      const newState = { ...state };
 
       // early return if user loses
-      if (newMutable.shuffledOrder[newMutable.clickCount] !== payload.color) {
-        newMutable.isClickAllowed = false;
-        newMutable.effect = GAME_OVER;
-        return { ...newMutable }
+      if (newState.shuffledOrder[newState.clickCount] !== payload.color) {
+        newState.isClickAllowed = false;
+        newState.effect = GAME_OVER;
+        return newState;
       }
 
-      newMutable.clickCount++
-      newMutable.score += newMutable.level * configs.maxTonesByLevel
+      newState.clickCount++;
+      newState.score += newState.currentLevelOptions.pointsOnCorrectClick;
       // early return if the last click is correct but the click section is not finished
-      if (newMutable.clickCount !== newMutable.shuffledOrder.length) {
-        return { ...newMutable }
-      }
+      if (newState.clickCount !== newState.shuffledOrder.length) {
+        return newState;
+      };
 
-      newMutable.clickCount = 0
-      newMutable.round++
-      newMutable.isClickAllowed = false
+      newState.score += newState.currentLevelOptions.bonusForFinishedRound;
+      newState.clickCount = 0;
+      newState.round++;
+      newState.isClickAllowed = false;
+
       //early return if is new round but not new level
-      if (newMutable.round < configs.maxTonesByLevel) {
-        newMutable.effect = READY_TO_NEW_ROUND;
-        return { ...newMutable }
+      if (newState.round < newState.currentLevelOptions.rounds) {
+        newState.effect = READY_TO_NEW_ROUND;
+        return newState;
       }
 
-      newMutable.level++
-      newMutable.round = 0
-      newMutable.shuffledOrder = []
-      const { buttons, timeToTurnOff, timeToResolve } = storage.levelInfos[newMutable.level - 1];
-      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }))
-      newMutable.buttons = newButtons
-      newMutable.timeToTurnOff = timeToTurnOff
-      newMutable.timeToResolve = timeToResolve
+      newState.level++;
+      newState.score = newState.currentLevelOptions.roundedScoreOnLevelEnd;
+      newState.round = 0;
+      newState.shuffledOrder = [];
       // early return if is new level
-      if (newMutable.level < configs.maxLevel) {
-        newMutable.effect = READY_TO_NEW_LEVEL
-        return { ...newMutable }
-      }
+      if (newState.level <= data.levelInfos.length) {
+        const newLevelOptions = data.levelInfos[newState.level - 1];
+        const { buttons } = newLevelOptions;
+        const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));
+        newLevelOptions.buttons = newButtons;
+        newState.currentLevelOptions = newLevelOptions;
+        newState.effect = READY_TO_NEW_LEVEL;
+        return newState;
+      };
 
       // userwins
-      newMutable.isClickAllowed = false;
-      newMutable.effect = USER_WINS
-      return { ...newMutable }
+      newState.level = data.levelInfos.length;
+      newState.isClickAllowed = false;
+      newState.effect = USER_WINS;
+      return newState;
     },
 
     [TURN_BUTTON_ON]: () => {
-      let noteToTrigger = ''
-      const newButtons = mutable.buttons.map(button => {
-        const newButton = { ...button }
+      let noteToTrigger = '';
+      const newButtons = state.currentLevelOptions.buttons.map(button => {
+        const newButton = { ...button };
         if (button.color === payload.color) {
-          newButton.isLightOn = true
-          noteToTrigger = button.note
-        }
+          newButton.isLightOn = true;
+          noteToTrigger = button.note;
+        };
 
-        return newButton
-      })
-      return { ...mutable, buttons: newButtons, effect: READY_TO_ATTACK_SOUND, noteToTrigger }
+        return newButton;
+      });
+      const newLevelOptions = { ...state.currentLevelOptions, buttons: newButtons };
+      return { ...state, currentLevelOptions: newLevelOptions, effect: READY_TO_ATTACK_SOUND, noteToTrigger };
     },
 
     [TURN_BUTTON_OFF]: () => {
-      const newButtons = mutable.buttons.map(button => {
-        const newButton = { ...button }
-        if (button.color === payload.color) newButton.isLightOn = false
-        return newButton
+      const newButtons = state.currentLevelOptions.buttons.map(button => {
+        const newButton = { ...button };
+        if (button.color === payload.color) newButton.isLightOn = false;
+        return newButton;
       })
-      return { ...mutable, buttons: newButtons, effect: READY_TO_RELEASE_SOUND }
-
+      const newLevelOptions = { ...state.currentLevelOptions, buttons: newButtons };
+      return { ...state, currentLevelOptions: newLevelOptions, effect: READY_TO_RELEASE_SOUND };
     },
 
     [START]: () => {
-      const newMutable = {
-        ...mutable,
+      const newLevelOptions = data.levelInfos[config.startLevel - 1];
+      const { buttons } = newLevelOptions;
+      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));
+      newLevelOptions.buttons = newButtons;
+
+      return {
+        ...state,
+        currentLevelOptions: newLevelOptions,
         shuffledOrder: [],
         round: 0,
         clickCount: 0,
         isClickAllowed: false,
         score: 0,
         message: '',
-        level: configs.startLevel,
+        level: config.startLevel,
         onGame: true,
         effect: READY_TO_NEW_LEVEL,
-      }
-      return { ...newMutable }
+      };
     },
 
     [STOP]: () => {
-      const message = payload.message || mutable.message
-      const newMutable = {
-        ...mutable,
+      const message = payload.message || state.message;
+      return {
+        ...state,
         message,
         effect: STOPPED,
         onGame: false,
         isClickAllowed: false
-      }
-      return { ...newMutable }
+      };
     },
 
     [SET_MESSAGE]: () => {
-      const { message } = payload
-      const newMutable = { ...mutable, message, }
-      return { ...newMutable }
+      return { ...state, message: payload.message };
     },
 
     [ADD_NEW_COLOR]: () => {
-      const { newColor } = payload
-      const newMutable = {
-        ...mutable,
-        shuffledOrder: [...mutable.shuffledOrder, newColor],
+      const { newColor } = payload;
+      return {
+        ...state,
+        shuffledOrder: [...state.shuffledOrder, newColor],
         effect: READY_TO_TRIGGER_BUTTONS,
         isClickAllowed: false
-      }
-      return { ...newMutable }
+      };
     },
 
     [GAME_PASSIVE]: () => {
-      const newMutable = {
-        ...mutable,
+      return {
+        ...state,
         effect: WAITING_FOR_USER_CLICKS,
         isClickAllowed: true
-      }
-      return { ...newMutable }
+      };
     },
 
     [LOAD]: () => {
-      const index = storage.textStorage.languages.findIndex(({ short }) => configs.currentLanguage === short)
-      const texts = storage.textStorage.texts[index]
-      const message = texts.wellcomeMessage
-      const { buttons, timeToTurnOff, timeToResolve } = storage.levelInfos[configs.startLevel - 1];
-      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }))
-      const newMutable = { ...mutable, buttons: newButtons, texts, message, timeToTurnOff, timeToResolve, }
-      return { ...newMutable }
+      const { navigator } = window;
+
+      const secureNavLangList = navigator.languages || [];
+      const clientLanguages = [navigator.language, ...secureNavLangList];
+
+      const { languages } = data.textStorage;
+
+      const clientLanguage = languages.find(({ short, ISO }) => {
+        const clientLang = clientLanguages.find(lang => short === lang || ISO === lang);
+        return clientLang === short || clientLang === ISO;
+      });
+
+      const selectedLanguage = clientLanguage ? clientLanguage.short : config.defaultLanguage;
+      const languageIndex = languages.findIndex(({ short }) => selectedLanguage === short);
+
+      const texts = data.textStorage.texts[languageIndex];
+      const message = texts.wellcomeMessage;
+
+      const newLevelOptions = data.levelInfos[config.startLevel - 1];
+      const { buttons } = newLevelOptions;
+      const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));
+      newLevelOptions.buttons = newButtons;
+      return { ...state, currentLevelOptions: newLevelOptions, languages, texts, message, };
     },
 
     [CHANGE_LANGUAGE]: () => {
-      const index = storage.textStorage.languages.findIndex(({ short }) => payload.lang === short)
-      const texts = storage.textStorage.texts[index]
-      const message = mutable.onGame ? '' : texts.wellcomeMessage
-      const newMutable = { ...mutable, message, texts }
-      return { ...newMutable }
+      const index = data.textStorage.languages.findIndex(({ short }) => payload.lang === short);
+      const texts = data.textStorage.texts[index];
+      const message = state.onGame ? '' : texts.wellcomeMessage;
+      return { ...state, message, texts };
     },
   };
 
-  const newMutable = actions[type]();
+  const newState = actions[type]();
 
-  return { configs, storage, mutable: newMutable }
+  return newState;
 };
 
-export default reducer
+export default reducer;
