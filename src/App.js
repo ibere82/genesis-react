@@ -5,101 +5,82 @@ import reducer from './hooks/reducer';
 import initialState from './state/gameState.js';
 import { winMusic, gameOverMusic } from './data';
 import Page from './components/main/Page';
-import * as effectsTypes from './state/effectsTypes.js';
 
 const synth = new Tone.AMSynth().toDestination();
 
 const {
-  INITIAL,
-  READY_TO_NEW_LEVEL,
-  READY_TO_NEW_ROUND,
-  READY_TO_TRIGGER_BUTTONS,
-  GAME_OVER,
-  USER_WINS,
-  STOPPED,
-  WAITING_FOR_USER_CLICKS,
-  READY_TO_ATTACK_SOUND,
-  READY_TO_RELEASE_SOUND,
-} = effectsTypes;
-
-const {
-  STOP,
-  SET_MESSAGE,
-  ADD_NEW_COLOR,
-  GAME_PASSIVE,
   LOAD,
+  START_GAME,
+  START_LEVEL,
+  GAME_PASSIVE,
   TURN_BUTTON_ON,
   TURN_BUTTON_OFF,
+  STOP,
+  SET_MESSAGE,
 } = actionTypes;
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { current } = useRef({ onGameRightNow: false });
-  const { currentLevelOptions, level, shuffledOrder, effect, texts, noteToTrigger } = state;
+  const { current } = useRef({ rightNow: { onGame: false } });
+  const { currentLevelOptions, level, round, shuffledOrder, texts, noteToTrigger, gameNumber, onGame, userWins, gameOver } = state;
   const { buttons } = currentLevelOptions;
-  const { nextLevelMessage, gameOverMessage, winMessages, } = texts;
+  const { nextLevelMessage, winMessages, } = texts;
+
 
   useEffect(() => {
+    dispatch({ type: LOAD });
+  }, [])
 
-    const effects = {
+  useEffect(() => {
+    if (gameNumber > 0) dispatch({ type: START_GAME })
+  }, [gameNumber])
 
-      [INITIAL]: () => {
-        dispatch({ type: LOAD });
-      },
+  useEffect(() => {
+    if (gameOver) (async () => {
+      current.rightNow.onGame = false
+      await playGameOverMusic();
+      dispatch({ type: STOP });
+    })();
+  }, [gameOver])
 
-      [READY_TO_NEW_LEVEL]: async () => {
-        current.onGameRightNow = true;
+  useEffect(() => {
+    if (userWins) (async () => {
+      await playVictoryShow();
+      dispatch({ type: STOP, payload: { message: winMessages[1] } });
+      current.rightNow.onGame = false
+    })();
+  }, [userWins]);
+
+  useEffect(() => {
+    current.rightNow.onGame = onGame
+    if (!onGame) synth.triggerRelease()
+  }, [onGame])
+
+  useEffect(() => {
+    (async () => {
+      if (level > 0) {
         await manageEphemeralMessage(`${nextLevelMessage} ${level}`);
-        if (current.onGameRightNow) addNewShuffledColor();
-      },
+        dispatch({ type: START_LEVEL })
+      }
+    })();
+  }, [level])
 
-      [READY_TO_NEW_ROUND]: () => {
-        setTimeout(() => {
-          addNewShuffledColor();
-        }, 500);
-      },
-
-      [READY_TO_TRIGGER_BUTTONS]: async () => {
+  useEffect(() => {
+    const { timeToTurnOff, timeToResolve } = currentLevelOptions;
+    if (round) {
+      setTimeout(async () => {
         for (let color of shuffledOrder) {
-          if (current.onGameRightNow) await scheduleOnOffPads(color);
+          if (current.rightNow.onGame) await scheduleOnOffPads(color, timeToTurnOff, timeToResolve);
         };
         dispatch({ type: GAME_PASSIVE });
-      },
+      }, 500);
+    }
+  }, [round])
 
-      [GAME_OVER]: async () => {
-        dispatch({ type: SET_MESSAGE, payload: { message: gameOverMessage } });
-        await playGameOverMusic();
-        dispatch({ type: STOP });
-      },
-
-      [USER_WINS]: async () => {
-        dispatch({ type: SET_MESSAGE, payload: { message: winMessages[0] } });
-        await playVictoryShow();
-        dispatch({ type: STOP, payload: { message: winMessages[1] } });
-      },
-
-      [STOPPED]: () => {
-        synth.triggerRelease();
-        current.onGameRightNow = false;
-      },
-
-      [READY_TO_ATTACK_SOUND]: () => {
-        synth.triggerAttack(noteToTrigger);
-      },
-
-      [READY_TO_RELEASE_SOUND]: () => {
-        synth.triggerRelease();
-      },
-
-      [WAITING_FOR_USER_CLICKS]: () => {
-        // TODO: after 3000ms ask user to play 
-      }
-
-    };
-
-    effects[effect]();
-
-  }, [effect]);
+  useEffect(() => {
+    if (noteToTrigger !== '') synth.triggerAttack(noteToTrigger)
+    else synth.triggerRelease();
+  }, [noteToTrigger])
 
   const playGameOverMusic = () => {
     return new Promise((resolve) => {
@@ -113,24 +94,15 @@ function App() {
     });
   };
 
-  const addNewShuffledColor = async () => {
-    const randomic = Math.floor(Math.random() * 4);
-    dispatch({ type: ADD_NEW_COLOR, payload: { newColor: buttons[randomic].color } });
-  };
-
-  const scheduleOnOffPads = (color) => {
-    const { timeToTurnOff, timeToResolve } = currentLevelOptions;
-
+  const scheduleOnOffPads = (color, timeDuring = 50, timeAfter = 75) => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch({ type: TURN_BUTTON_ON, payload: { color } });
-      }, 10);
+      dispatch({ type: TURN_BUTTON_ON, payload: { color } });
       setTimeout(() => {
         dispatch({ type: TURN_BUTTON_OFF, payload: { color } });
-      }, timeToTurnOff);
+      }, timeDuring);
       setTimeout(() => {
         resolve();
-      }, timeToResolve);
+      }, timeAfter);
     });
   };
 
@@ -138,7 +110,7 @@ function App() {
     const wholeMusic = [...winMusic, ...winMusic, ...winMusic, ...winMusic];
     return new Promise(async (resolve) => {
       for (let index of wholeMusic) {
-        if (current.onGameRightNow) await scheduleOnOffPads(buttons[index].color);
+        if (current.rightNow.onGame) await scheduleOnOffPads(buttons[index].color);
       };
       resolve();
     });
@@ -148,11 +120,11 @@ function App() {
     return new Promise((resolve) => {
 
       setTimeout(() => {
-        if (current.onGameRightNow) dispatch({ type: SET_MESSAGE, payload: { message: text } });
+        if (current.rightNow.onGame) dispatch({ type: SET_MESSAGE, payload: { message: text } });
       }, timeBefore);
 
       setTimeout(() => {
-        if (current.onGameRightNow) dispatch({ type: SET_MESSAGE, payload: { message: '' } });
+        if (current.rightNow.onGame) dispatch({ type: SET_MESSAGE, payload: { message: '' } });
       }, timeDuring);
 
       setTimeout(() => {

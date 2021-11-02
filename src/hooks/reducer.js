@@ -1,34 +1,26 @@
 import * as actionTypes from '../state/actionsTypes.js';
-import * as effectTypes from '../state/effectsTypes.js';
 import * as data from '../data';
 import config from '../config';
 
 const {
-  CLICK,
-  START,
-  STOP,
-  SET_MESSAGE,
-  ADD_NEW_COLOR,
-  GAME_PASSIVE,
   LOAD,
-  CHANGE_LANGUAGE,
+  NEW_GAME,
+  START_GAME,
+  START_LEVEL,
+  GAME_PASSIVE,
+  CLICK,
   TURN_BUTTON_ON,
   TURN_BUTTON_OFF,
+  STOP,
+  SET_MESSAGE,
+  CHANGE_LANGUAGE,
 } = actionTypes;
 
-const {
-  READY_TO_NEW_LEVEL,
-  READY_TO_NEW_ROUND,
-  READY_TO_TRIGGER_BUTTONS,
-  GAME_OVER,
-  USER_WINS,
-  STOPPED,
-  WAITING_FOR_USER_CLICKS,
-  READY_TO_ATTACK_SOUND,
-  READY_TO_RELEASE_SOUND,
-} = effectTypes;
-
 function reducer(state, { type, payload = {} }) {
+
+  // an alternative to the classic switch to allow internal scope in each case
+  // each property in actions object corresponds to a function that will be 
+  // dynamically called using the 'type' as property name.
 
   const actions = {
 
@@ -37,13 +29,14 @@ function reducer(state, { type, payload = {} }) {
       const newState = { ...state };
 
       // early return if user loses
-      if (newState.shuffledOrder[newState.clickCount] !== payload.color) {
+      newState.clickCount++;
+      if (newState.shuffledOrder[newState.clickCount - 1] !== payload.color) {
         newState.isClickAllowed = false;
-        newState.effect = GAME_OVER;
+        newState.message = newState.texts.gameOverMessage;
+        newState.gameOver = true;
         return newState;
       }
 
-      newState.clickCount++;
       newState.score += newState.currentLevelOptions.pointsOnCorrectClick;
       // early return if the last click is correct but the click section is not finished
       if (newState.clickCount !== newState.shuffledOrder.length) {
@@ -52,12 +45,14 @@ function reducer(state, { type, payload = {} }) {
 
       newState.score += newState.currentLevelOptions.bonusForFinishedRound;
       newState.clickCount = 0;
+
+      const randomic = Math.floor(Math.random() * 4);
+      newState.shuffledOrder = [...state.shuffledOrder, state.currentLevelOptions.buttons[randomic].color]
       newState.round++;
       newState.isClickAllowed = false;
 
       //early return if is new round but not new level
-      if (newState.round < newState.currentLevelOptions.rounds) {
-        newState.effect = READY_TO_NEW_ROUND;
+      if (newState.round <= newState.currentLevelOptions.rounds) {
         return newState;
       }
 
@@ -72,14 +67,15 @@ function reducer(state, { type, payload = {} }) {
         const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));
         newLevelOptions.buttons = newButtons;
         newState.currentLevelOptions = newLevelOptions;
-        newState.effect = READY_TO_NEW_LEVEL;
+
         return newState;
       };
 
       // userwins
       newState.level = data.levelInfos.length;
       newState.isClickAllowed = false;
-      newState.effect = USER_WINS;
+      newState.message = newState.texts.winMessages[0];
+      newState.userWins = true;
       return newState;
     },
 
@@ -95,7 +91,7 @@ function reducer(state, { type, payload = {} }) {
         return newButton;
       });
       const newLevelOptions = { ...state.currentLevelOptions, buttons: newButtons };
-      return { ...state, currentLevelOptions: newLevelOptions, effect: READY_TO_ATTACK_SOUND, noteToTrigger };
+      return { ...state, currentLevelOptions: newLevelOptions, noteToTrigger };
     },
 
     [TURN_BUTTON_OFF]: () => {
@@ -105,10 +101,10 @@ function reducer(state, { type, payload = {} }) {
         return newButton;
       })
       const newLevelOptions = { ...state.currentLevelOptions, buttons: newButtons };
-      return { ...state, currentLevelOptions: newLevelOptions, effect: READY_TO_RELEASE_SOUND };
+      return { ...state, currentLevelOptions: newLevelOptions, noteToTrigger: '' };
     },
 
-    [START]: () => {
+    [NEW_GAME]: () => {
       const newLevelOptions = data.levelInfos[config.startLevel - 1];
       const { buttons } = newLevelOptions;
       const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));
@@ -116,16 +112,17 @@ function reducer(state, { type, payload = {} }) {
 
       return {
         ...state,
+        gameNumber: state.gameNumber + 1,
         currentLevelOptions: newLevelOptions,
         shuffledOrder: [],
-        round: 0,
-        clickCount: 0,
+        clickCount: null,
         isClickAllowed: false,
         score: 0,
         message: '',
-        level: config.startLevel,
+        level: null,
+        round: null,
         onGame: true,
-        effect: READY_TO_NEW_LEVEL,
+
       };
     },
 
@@ -134,42 +131,40 @@ function reducer(state, { type, payload = {} }) {
       return {
         ...state,
         message,
-        effect: STOPPED,
         onGame: false,
-        isClickAllowed: false
+        isClickAllowed: false,
+        gameOver: false,
+        userWins: false,
       };
+    },
+
+    [START_GAME]: () => {
+      return {
+        ...state,
+        level: config.startLevel
+      }
+    },
+
+    [START_LEVEL]: () => {
+      const randomic = Math.floor(Math.random() * 4);
+      const shuffledOrder = [...state.shuffledOrder, state.currentLevelOptions.buttons[randomic].color]
+      const round = state.round + 1
+      return { ...state, shuffledOrder, round }
     },
 
     [SET_MESSAGE]: () => {
       return { ...state, message: payload.message };
     },
 
-    [ADD_NEW_COLOR]: () => {
-      const { newColor } = payload;
-      return {
-        ...state,
-        shuffledOrder: [...state.shuffledOrder, newColor],
-        effect: READY_TO_TRIGGER_BUTTONS,
-        isClickAllowed: false
-      };
-    },
-
     [GAME_PASSIVE]: () => {
-      return {
-        ...state,
-        effect: WAITING_FOR_USER_CLICKS,
-        isClickAllowed: true
-      };
+      return { ...state, isClickAllowed: true };
     },
 
     [LOAD]: () => {
       const { navigator } = window;
-
       const secureNavLangList = navigator.languages || [];
       const clientLanguages = [navigator.language, ...secureNavLangList];
-
       const { languages } = data.textStorage;
-
       const clientLanguage = languages.find(({ short, ISO }) => {
         const clientLang = clientLanguages.find(lang => short === lang || ISO === lang);
         return clientLang === short || clientLang === ISO;
@@ -177,10 +172,8 @@ function reducer(state, { type, payload = {} }) {
 
       const selectedLanguage = clientLanguage ? clientLanguage.short : config.defaultLanguage;
       const languageIndex = languages.findIndex(({ short }) => selectedLanguage === short);
-
       const texts = data.textStorage.texts[languageIndex];
       const message = texts.wellcomeMessage;
-
       const newLevelOptions = data.levelInfos[config.startLevel - 1];
       const { buttons } = newLevelOptions;
       const newButtons = buttons.map(button => ({ ...button, isLightOn: false }));

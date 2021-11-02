@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { START, STOP, } from '../../state/actionsTypes.js';
+import { NEW_GAME, STOP, } from '../../state/actionsTypes.js';
 import Footer from './Footer';
 import LangMenu from '../wrappers/LangMenu';
 import GameArea from '../wrappers/GameArea';
@@ -69,7 +69,7 @@ export default function Page({ dispatch, state }) {
     />
   );
 
-  const startNewGame = () => dispatch({ type: START })
+  const startNewGame = () => dispatch({ type: NEW_GAME })
 
   const stopGame = () => dispatch({ type: STOP, payload: { message: state.texts.abortedGameMessage } })
 

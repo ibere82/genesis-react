@@ -58,7 +58,7 @@ export default function CenterPanel({ labels, level, score }) {
   useEffect(() => {
 
     const scoreDiff = score - lastScore;
-    const timeOut = Math.ceil(100 / (scoreDiff === 0 ? 100 : scoreDiff));
+    const timeOut = scoreDiff === 0 ? 1 : Math.ceil(100 / scoreDiff);
     const unsafeIncrement = Math.ceil(scoreDiff / 100);
     const safeIncrement = unsafeIncrement < 1 ? 1 : unsafeIncrement;
     const incrementedScore = lastScore + safeIncrement;
@@ -80,7 +80,7 @@ export default function CenterPanel({ labels, level, score }) {
           <span>{labels.levelLabel}</span>
         </LabelContainer>
         <DigitalPanel
-          number={level}
+          number={level || 0}
           digits='1'
           height={`${height}px`}
         />

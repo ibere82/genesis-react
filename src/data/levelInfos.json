@@ -2,7 +2,7 @@
     {
         "timeToTurnOff": 500,
         "timeToResolve": 750,
-        "rounds": 8,
+        "rounds": 6,
         "pointsOnCorrectClick": 1,
         "bonusForFinishedRound": 10,
         "bonusForFinishedLevel": 150,
@@ -47,9 +47,9 @@
         ]
     },
     {
-        "timeToTurnOff": 450,
-        "timeToResolve": 675,
-        "rounds": 8,
+        "timeToTurnOff": 500,
+        "timeToResolve": 750,
+        "rounds": 7,
         "pointsOnCorrectClick": 2,
         "bonusForFinishedRound": 20,
         "bonusForFinishedLevel": 250,
@@ -94,9 +94,9 @@
         ]
     },
     {
-        "timeToTurnOff": 400,
-        "timeToResolve": 500,
-        "rounds": 9,
+        "timeToTurnOff": 450,
+        "timeToResolve": 675,
+        "rounds": 8,
         "pointsOnCorrectClick": 3,
         "bonusForFinishedRound": 35,
         "bonusForFinishedLevel": 500,
@@ -141,8 +141,8 @@
         ]
     },
     {
-        "timeToTurnOff": 350,
-        "timeToResolve": 525,
+        "timeToTurnOff": 450,
+        "timeToResolve": 675,
         "rounds": 9,
         "pointsOnCorrectClick": 4,
         "bonusForFinishedRound": 50,
@@ -188,8 +188,8 @@
         ]
     },
     {
-        "timeToTurnOff": 300,
-        "timeToResolve": 450,
+        "timeToTurnOff": 400,
+        "timeToResolve": 600,
         "rounds": 10,
         "pointsOnCorrectClick": 5,
         "bonusForFinishedRound": 75,
@@ -235,8 +235,8 @@
         ]
     },
     {
-        "timeToTurnOff": 250,
-        "timeToResolve": 375,
+        "timeToTurnOff": 350,
+        "timeToResolve": 525,
         "rounds": 10,
         "pointsOnCorrectClick": 6,
         "bonusForFinishedRound": 100,
@@ -282,8 +282,8 @@
         ]
     },
     {
-        "timeToTurnOff": 200,
-        "timeToResolve": 300,
+        "timeToTurnOff": 300,
+        "timeToResolve": 450,
         "rounds": 11,
         "pointsOnCorrectClick": 7,
         "bonusForFinishedRound": 200,
@@ -329,8 +329,8 @@
         ]
     },
     {
-        "timeToTurnOff": 150,
-        "timeToResolve": 225,
+        "timeToTurnOff": 250,
+        "timeToResolve": 375,
         "rounds": 11,
         "pointsOnCorrectClick": 8,
         "bonusForFinishedRound": 300,
@@ -376,8 +376,8 @@
         ]
     },
     {
-        "timeToTurnOff": 100,
-        "timeToResolve": 150,
+        "timeToTurnOff": 200,
+        "timeToResolve": 300,
         "rounds": 12,
         "pointsOnCorrectClick": 9,
         "bonusForFinishedRound": 400,
@@ -423,8 +423,8 @@
         ]
     },
     {
-        "timeToTurnOff": 50,
-        "timeToResolve": 75,
+        "timeToTurnOff": 150,
+        "timeToResolve": 225,
         "rounds": 12,
         "pointsOnCorrectClick": 10,
         "bonusForFinishedRound": 1000,

@@ -1,12 +1,11 @@
-import { INITIAL } from './effectsTypes.js'
 
 const gameState = {
-  effect: INITIAL,
   onGame: false,
+  gameNumber: 0,
   shuffledOrder: [],
-  round: 0,
-  clickCount: 0,
-  level: 0,
+  round: null,
+  clickCount: null,
+  level: null,
   score: 0,
   noteToTrigger: '',
   message: '',
@@ -25,6 +24,8 @@ const gameState = {
   currentLanguage: '',
   languages: [],
   texts: {},
+  gameOver: false,
+  userWins: false,
 };
 
 export default gameState;
