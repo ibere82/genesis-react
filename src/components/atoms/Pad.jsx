@@ -1,6 +1,6 @@
 import { EventInjector } from 'react-event-injector';
 import styled from 'styled-components';
-import { CLICK, TURN_BUTTON_ON, TURN_BUTTON_OFF } from '../../state/actionsTypes.js';
+import { CLICK, BUTTON_ACTION, } from '../../state/actionsTypes.js';
 
 const ColoredButton = styled.div`
   ${({ position, gradient, allowClick, isOn }) => {
@@ -24,12 +24,12 @@ const ColoredButton = styled.div`
 export default function Pad({ color, gradient, allowClick, position, dispatch, isLightOn }) {
 
   const handleMouseDown = () => {
-    if (allowClick) dispatch({ type: TURN_BUTTON_ON, payload: { color } });
+    if (allowClick) dispatch({ type: BUTTON_ACTION, payload: { color, status: 'ON' } });
   };
 
   const handleMouseUp = () => {
     if (isLightOn) {
-      dispatch({ type: TURN_BUTTON_OFF, payload: { color } });
+      dispatch({ type: BUTTON_ACTION, payload: { color, status: 'OFF' } });
       dispatch({ type: CLICK, payload: { color } });
     };
   };

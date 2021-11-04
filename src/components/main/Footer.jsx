@@ -18,7 +18,9 @@ export default function Footer() {
         <Link target="_blank" rel="noreferrer" href="https://github.com/SpruceGabriela/genesis-dio">
           Gabriela Pinheiro's original project
         </Link>
-        &nbsp;as a task for the Eduzz Fullstack Developer Bootcamp from&nbsp;
+        &nbsp;as a task for the&nbsp;
+        <Link target="_blank" rel="noreferrer" href="https://www.eduzz.com/">Eduzz</Link>
+        &nbsp;Fullstack Developer Bootcamp from&nbsp;
         <Link target="_blank" rel="noreferrer" href="https://digitalinnovation.one/">DIO - Digital Inovation One</Link>
       </p>
       <p>Icons made by&nbsp;

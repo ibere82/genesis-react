@@ -46,9 +46,24 @@ const PadsContainer = styled.div`
  }
 `;
 
-export default function Page({ dispatch, state }) {
+export default function Page({ dispatch, currentState }) {
 
-  const languageMenu = state.languages.map(({ short, whole, flagImg }) =>
+  const {
+    buttons,
+    languages,
+    isClickAllowed,
+    level,
+    score,
+    message,
+    onGame,
+    abortedGameMessage,
+    stopGameButtonLabel,
+    startGameButtonLabel,
+    levelLabel,
+    scoreLabel,
+  } = currentState;
+
+  const LanguageMenu = languages.map(({ short, whole, flagImg }) =>
     <Flag
       key={short}
       src={flagImg}
@@ -57,41 +72,41 @@ export default function Page({ dispatch, state }) {
       short={short} />
   );
 
-  const buttons = state.currentLevelOptions.buttons.map(({ color, position, gradient, isLightOn }) =>
+  const Buttons = buttons.map(({ color, position, gradient, isLightOn }) =>
     <Pad
       key={color}
       color={color}
       gradient={gradient}
       isLightOn={isLightOn}
       position={position}
-      allowClick={state.isClickAllowed}
+      allowClick={isClickAllowed}
       dispatch={dispatch}
     />
   );
 
-  const startNewGame = () => dispatch({ type: NEW_GAME })
+  const startNewGame = () => dispatch({ type: NEW_GAME });
 
-  const stopGame = () => dispatch({ type: STOP, payload: { message: state.texts.abortedGameMessage } })
+  const stopGame = () => dispatch({ type: STOP, payload: { message: abortedGameMessage } });
 
   return (
     <>
       <Main>
         <GameArea>
           <LangMenu>
-            {languageMenu}
+            {LanguageMenu}
           </LangMenu>
           <PadsContainer>
-            {buttons}
+            {Buttons}
           </PadsContainer>
-          <CenterPanel labels={state.texts} level={state.level} score={state.score} />
-          <TopMessage message={state.message} />
+          <CenterPanel labels={{levelLabel, scoreLabel}} level={level} score={score} />
+          <TopMessage message={message} />
           <IconsArea />
         </GameArea>
       </Main>
       <ButtonContainer>
         <StartPauseButton
-          handle={state.onGame ? stopGame : startNewGame}
-          label={state.onGame ? state.texts.stopGameButtonLabel : state.texts.startGameButtonLabel} />
+          handle={onGame ? stopGame : startNewGame}
+          label={onGame ? stopGameButtonLabel : startGameButtonLabel} />
       </ButtonContainer>
       <Footer />
     </>
